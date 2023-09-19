@@ -1,0 +1,20 @@
+https://leetcode.com/explore/featured/card/the-leetcode-beginners-guide/678/sql-data-structure/4353/
+
+
+Study Tip: After solving a problem, it's natural to want to move on to the next problem quickly. However, we highly recommend that you check out the discuss section and/or the official solution article, even if you solved the problem with ease.
+
+Most problems can be solved in several ways, and each problem may present a learning opportunity. Compare your solution to others' code and read their explanations. Look for more efficient solutions, look for any data structures or algorithms that you are unfamiliar with, and don't be afraid to expose yourself to code written in other languages.
+
+If you find a more efficient solution, it's excellent practice to solve the problem again from scratch while trying to implement the more efficient solution on your own. If you find a data structure or algorithm that you did not know, check out the explore card, read a few high-quality posts, or search for a study guide for that topic. Most importantly, take that information with you to use the next time you encounter a similar problem!
+
+
+
+-3 link within article useful.
+
+
+
+https://leetcode.com/discuss/study-guide/2009997/How-to-get-started-with-DSA-and-practice-Leetcode-Efficiently
+
+Consistency is the Key!
+One of the major reasons people not improving in problem-solving and DSA is they are lacking consistency. It's hard to do leetcode daily, but if you convince your mind to do it as a habit then it will be easy.
+Let me link it with an example, you do brush your teeth daily without even thinking twice. No matter what happens, you will brush your teeth because you have been doing it for a long time and you have no trouble doing it. Make the same habit with leetcode, fix a time slot in the day, and do Leetcode daily at the same time. If you do this 2 - 3 months without missing a single day, missing a day will be more difficult than doing leetcode that day.
