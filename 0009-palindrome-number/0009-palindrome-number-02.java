@@ -1,6 +1,8 @@
 /*
 Approach 2 (My solution) :
-Second idea would be reverting the number itself, and then compare the number with original number, if they are the same, then the number is a palindrome. However, if the reversed number is larger than int.MAX, we will hit integer overflow problem.
+Second idea would be reverting the number itself, and then comparing the number with the original number, if they are the same, then the number is a palindrome. However, if the reversed number is larger than int.MAX, we will hit integer overflow problem.
+
+Same solution on leetcode with Overflow prevention. check that solution.
 */
 
 
