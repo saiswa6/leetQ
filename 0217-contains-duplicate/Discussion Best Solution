@@ -1,0 +1,47 @@
+/*
+Easy and Simple code in just 3 line
+
+Explanation: if size of array nums less than set size, definitely duplicates would have come.
+Use LinkedHashSet to remove the duplicates, then compare hashset size with array size. return result...
+*/
+
+class Solution {
+    public boolean containsDuplicate(int[] nums) {
+        LinkedHashSet<Integer> set = new LinkedHashSet<Integer>();
+        for (int i = 0; i < nums.length; i++) set.add(nums[i]);
+        return set.size() != nums.length; -----> seems less than is correct . think once.
+    }
+}
+
+/*
+https://leetcode.com/problems/contains-duplicate/solutions/60937/3ms-java-solution-with-bit-manipulation/
+Java Solution with Bit Manipulation -- GO THROUGH POST AND GET MORE CLARITY
+===================================
+if the range of element provided, we can use byte array as a marker.
+
+This solution is very interesting. I want to share my understanding about it.
+
+For this problem, one of the simplest solutions is to create a big lookup table k. The value of each element in the table is to determine whether the index value has appeared before. The solution with Bit Manipulation is similar to that. Instead of using 0 or 1 in each element to show whether the number exit, it uses 8 bits of each element to indicate the existence of 8 numbers.
+
+For a number A, assume k1 = A/8, k2 = A%8+1. It uses k1 as the index for the lookup table to get a element. And then the k2-th bit of the element is checked to find out whether A appeared before. If the bit is 1, return true. Or if the bit is 0, set the bit to 1 (add A to the lookup table).
+
+For example, now we get a number 0x800 (k1 = 0x100, k2 = 1). Then we get the 0x100-th byte in the table ( table[0x100] = 0b10000111). The 1st bit is 1. So we know 0x800 appeared before. Moreover, 0b10000111 means 0x800, 0x801, 0x802 and 0x807 has appeared before.
+
+I hope my explaination is helpful.
+*/
+
+public class Solution {
+public boolean containsDuplicate(int[] nums) {
+    byte[] mark = new byte[150000];
+    for (int i : nums) {
+        int j = i/8;
+        int k = i%8;
+        int check = 1<<k;
+        if ((mark[j] & check) != 0) {
+            return true;
+        }
+        mark[j]|=check;
+    }
+    return false;
+}
+}
