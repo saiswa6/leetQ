@@ -5,12 +5,13 @@ class Solution {
         {
             if(map.containsKey(nums[i]))
             {
-                int occurence = map.get(nums[i]) + 1; 
+                return true;
+                /*int occurence = map.get(nums[i]) + 1; 
                 map.put(nums[i], occurence);
                 if(occurence>1)
                 {
                     return true;
-                }
+                }*/
             }
             else
             {
