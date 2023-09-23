@@ -1,5 +1,8 @@
 class Solution {
     public int removeDuplicates(int[] nums) {
+        if(nums.length == 0){
+           return 0;
+        }
         int n = nums.length;
         int writer = 0, reader = 0;
         for(; reader< n ; reader++)
@@ -12,26 +15,5 @@ class Solution {
             }
         }
         return writer + 1;
-
-
-        /*
-        int n = nums.length;
-        int writer = 0, reader = 0;
-        for(; reader< n-1 ; reader++)
-        {
-            if(nums[reader] != nums[reader+1])
-            {
-                nums[writer] = nums[reader];
-                writer++;
-            }
-        }
-        if(reader < n && nums[reader-1] != nums[reader])
-        {
-            nums[writer] = nums[reader];
-            writer++;
-        }
-        return writer;
-        
-        */ 
     }
 }
