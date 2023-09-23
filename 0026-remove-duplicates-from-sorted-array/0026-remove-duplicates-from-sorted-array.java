@@ -10,8 +10,7 @@ class Solution {
             if(nums[reader] != nums[writer])
             {
                 writer++;
-                nums[writer] = nums[reader];
-                
+                nums[writer] = nums[reader];      
             }
         }
         return writer + 1;
