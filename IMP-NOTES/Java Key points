@@ -1,0 +1,5 @@
+-- HashMap stores key, value pairs and it does not allow duplicate keys. If the key is duplicate then the old key is replaced with the new value.
+
+-- Return 2 elements of array  --> return new int[] { i, j };
+
+-- For sorting array in java -->  Arrays.sort(nums2);
