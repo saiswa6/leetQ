@@ -15,7 +15,7 @@ class Solution {
         int start = 0, end = nums.length - 1;
         int arr [] = new int[2];
         int nums2 [] = nums.clone();
-        Arrays.sort(nums2);
+        Arrays.sort(nums2);                      ////LEARN THIS
         int value1 =0, value2 =0;
         while(start < end)
         {
