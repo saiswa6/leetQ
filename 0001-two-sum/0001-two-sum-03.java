@@ -12,6 +12,8 @@ Time complexity: O(n).
 We traverse the list containing n elements exactly twice. Since the hash table reduces the lookup time to O(1), the overall time complexity is O(n).
 Space complexity: O(n).
 The extra space required depends on the number of items stored in the hash table, which stores exactly n elements.
+
+-- NOTE : HashMap stores key, value pairs and it does not allow duplicate keys. If the key is duplicate then the old key is replaced with the new value.
 */
 
 class Solution {
@@ -22,7 +24,7 @@ class Solution {
         }
         for (int i = 0; i < nums.length; i++) {
             int complement = target - nums[i];
-            if (map.containsKey(complement) && map.get(complement) != i) {
+            if (map.containsKey(complement) && map.get(complement) != i) {    //HashMap stores key, value pairs and it does not allow duplicate keys. If the key is duplicate then the old key is replaced with the new value.
                 return new int[] { i, map.get(complement) };
             }
         }
