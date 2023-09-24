@@ -18,3 +18,16 @@
   destPos is the index from which the copied elements are placed in the destination array.
   length is the length of the subarray to be copied.
   Ex : // Copying elements of a[] to b[]  ----  System.arraycopy(a, 0, b, 0, 3);
+
+--Substring is a part of a String or can be said subset of the String. There are two variants of the substring() method. 
+  1. public String substring(int startIndex) -- The substring begins with the character at the specified index and extends to the end of this string. EX : Str.substring(10)
+  2. public String substring(int startIndex, int endIndex -- The substring begins with the character at the specified index and extends to the end of this string or up to endIndex – 1 if the second argument is given. 
+     beginIndex :  the begin index, inclusive.
+     endIndex :  the end index, exclusive.
+        String Str = new String("Welcome to geeksforgeeks")
+        System.out.println(Str.substring(10, 16));
+        The extracted substring  is :  geeks
+
+--Compare two Strings in Java
+  String.equals() :In Java, string equals() method compares the two given strings based on the data/content of the string. If all the contents of both the strings are same then it returns true. If any character does not match, then it returns false.
+   Refer https://www.geeksforgeeks.org/compare-two-strings-in-java/
