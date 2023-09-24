@@ -3,3 +3,18 @@
 -- Return 2 elements of array  --> return new int[] { i, j };
 
 -- For sorting array in java -->  Arrays.sort(nums2);
+
+-- COPYING ELEMENTS OF ARRAY TO NEW ARRAY
+  1. Iterating each element of the given original array and copy one element at a time
+  2. Using clone() method  // Copying elements of a[] to b[]  ===   int b[] = a.clone();
+  3. Using arraycopy() method
+  System.arraycopy() Method. The system is present in java.lang package. Its signature is as : 
+  public static void arraycopy(Object src, int srcPos, Object dest, int destPos, int length)
+  
+  Parameters:
+  src denotes the source array.
+  srcPos is the index from which copying starts.
+  dest denotes the destination array
+  destPos is the index from which the copied elements are placed in the destination array.
+  length is the length of the subarray to be copied.
+  Ex : // Copying elements of a[] to b[]  ----  System.arraycopy(a, 0, b, 0, 3);
