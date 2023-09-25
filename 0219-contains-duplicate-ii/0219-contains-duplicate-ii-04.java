@@ -1,5 +1,5 @@
 /*
-Approach #3: Hash Table
+Approach #4: Hash Table
 Intuition
 Keep a sliding window of k elements using Hash Table.
 
@@ -20,6 +20,7 @@ We do n operations of search, delete and insert, each with constant time complex
 
 Space complexity: O(min⁡(n,k)).
 The extra space required depends on the number of items stored in the hash table, which is the size of the sliding window, min⁡(n,k).
+== Hash Set add() return false if the same element already exists within HashSet. returns true if it's a new element insertion.
 */
 
 public boolean containsNearbyDuplicate(int[] nums, int k) {
