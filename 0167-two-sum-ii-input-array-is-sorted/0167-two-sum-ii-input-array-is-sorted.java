@@ -4,11 +4,12 @@ class Solution {
         int endPointer = numbers.length - 1;
         while(startPointer < endPointer)
         {
-            if( numbers[startPointer] + numbers[endPointer] == target)
+            int sum = numbers[startPointer] + numbers[endPointer];
+            if( sum == target)
             {
                 return new int[] {startPointer + 1, endPointer + 1};
             }
-            else if (numbers[startPointer] + numbers[endPointer] > target)
+            else if (sum > target)
             {
                 endPointer--;
             }
