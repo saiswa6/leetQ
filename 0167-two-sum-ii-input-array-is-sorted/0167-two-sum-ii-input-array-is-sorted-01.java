@@ -26,6 +26,7 @@ e.g.: long sum = static_cast<long>(numbers[low]) + numbers[high] for C++.
 - Casting ensures that we will not get the overflow error since the signed long data type supports numbers up to 2^63 - 1. 
 - Alternatively, if we cannot use long integers, then we can check if numbers[low] > (1 << 31) - 1 - numbers[high] at the beginning of each iteration. 
   If this condition is true, then numbers[low] + numbers[high] will result in integer overflow, and so we would move the larger index to the left.
+-  To handle overflow, use like this numbers[startPointer] = target - numbers[endPointer] or numbers[startPointer] > target - numbers[endPointer]
 
 Intuition
   Start with the full array. Let L be the leftmost element, R the rightmost.
