@@ -1,0 +1,4 @@
+- An integer overflow occurs when you attempt to store inside an integer variable a value that is larger than the maximum value the variable can hold. The C standard defines this situation as undefined behavior.
+
+- CWE-190: Integer Overflow or Wraparound   (CWE - Common Weakness Enumeration)
+  The product performs a calculation that can produce an integer overflow or wraparound, when the logic assumes that the resulting value will always be larger than the original value. This can introduce other weaknesses when the calculation is used for resource management or execution control.
