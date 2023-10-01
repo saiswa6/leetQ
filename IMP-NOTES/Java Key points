@@ -31,3 +31,13 @@
 --Compare two Strings in Java
   String.equals() :In Java, string equals() method compares the two given strings based on the data/content of the string. If all the contents of both the strings are same then it returns true. If any character does not match, then it returns false.
    Refer https://www.geeksforgeeks.org/compare-two-strings-in-java/
+
+
+-- List<Integer> list = new List<Integer>();
+    I get the following error message:
+    java.util.List is abstract; cannot be instantiated
+  Sol : 
+      In Java, List is an interface. That is, it cannot be instantiated directly.
+      Instead you can use ArrayList which is an implementation of that interface that uses an array as its backing store (hence the name).
+      Since ArrayList is a kind of List, you can easily upcast it:
+      List<T> mylist = new ArrayList<T>();
