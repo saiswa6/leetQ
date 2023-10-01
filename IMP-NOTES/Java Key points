@@ -41,3 +41,27 @@
       Instead you can use ArrayList which is an implementation of that interface that uses an array as its backing store (hence the name).
       Since ArrayList is a kind of List, you can easily upcast it:
       List<T> mylist = new ArrayList<T>();
+
+-- Hashset store only unique values of List<Integer> if tey are ordered in same sequence.
+    class Codechef
+    {
+    	public static void main (String[] args) throws java.lang.Exception
+    	{
+    		// your code goes here
+    		HashSet<List<Integer>> h = new HashSet<List<Integer>>();
+    		List<Integer> a = new ArrayList<Integer>();
+    		a.add(1);
+    		a.add(2);
+    		a.add(3);
+    		List<Integer> b = new ArrayList<Integer>();
+    		b.add(1);
+    		b.add(2);
+    		b.add(3);
+    		
+    		h.add(a);
+    		h.add(b);
+    		
+    		//Iterator it = h.
+    		System.out.println(h.size()); -------------- 1
+    	}
+    }
