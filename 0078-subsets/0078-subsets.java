@@ -1,22 +1,22 @@
 class Solution {
-    public List<List<Integer>> subsets(int[] nums) {
-        List<List<Integer>> result = new ArrayList<>();
-        result.add(new ArrayList<>());
+    List<List<Integer>> output = new ArrayList<>();
+    int n;
 
-        for(int num : nums)
+    public void backtrack(int start, ArrayList<Integer> curr, int [] nums)
+    {
+        output.add(new ArrayList<>(curr));
+
+        for(int i = start; i < n; i++)
         {
-            List<List<Integer>> middlecalc = new ArrayList<>();
-            for(List<Integer> a : result)
-            {
-                //a.add(num);
-                middlecalc.add(new ArrayList<Integer>(a) {{add(num);}});
-            }
-            for(List<Integer> b : middlecalc)
-            {
-                //a.add(num);
-                result.add(b);
-            }
+            curr.add(nums[i]);
+            backtrack(i + 1, curr, nums);
+            curr.remove(curr.size() - 1);
         }
-        return result;
+    }
+
+    public List<List<Integer>> subsets(int[] nums) {
+        n = nums.length;
+        backtrack(0, new ArrayList<Integer>(), nums);
+        return output;
     }
 }
