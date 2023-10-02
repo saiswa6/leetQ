@@ -8,7 +8,7 @@ We define a backtrack function named backtrack(first, curr) which takes the inde
    - Backtrack by removing nums[i] from curr.
 
 Complexity Analysis:
-Time complexity: O(N×2^N) to generate all subsets and then copy them into output list.
+Time complexity: O(N×2^N) to generate all subsets and then copy them into output list. for every recursive call in the recursion tree, we copy an array list which takes O(N) time, making overall T.C to be O(N x 2^N).
 Space complexity: O(N). We are using O(N) space to maintain curr, and are modifying curr in-place with backtracking. Note that for space complexity analysis, we do not count space that is only used for the purpose of returning output, so the output array is ignored.
 
 
