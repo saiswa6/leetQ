@@ -23,7 +23,25 @@ Time complexity: O(N×2^N) to generate all subsets and then copy them into outpu
 Space complexity: O(N×2^N). This is exactly the number of solutions for subsets multiplied by the number N of elements to keep for each subset.
  - For a given number, it could be present or absent (i.e. binary choice) in a subset solution. As as result, for N numbers, we would have in total 2^N choices (solutions).  
 
+Explanation of newSubsets.add(new ArrayList<Integer>(curr){{add(num);}});
+=========================================================================
+new ArrayList<Integer>(curr){
+....
+}
+creates an anonymous class (i.e. class definition on the fly/inline)
+and
 
+{
+  add (num)
+}
+such a block of code anywhere in a class gets executed when an instance is created (this was a new factoid for me)
+=== it ultimately is equivalent to
+        List<Integer> list = new ArrayList<Integer>(curr);
+        list.add(num);
+        newSubsets.add(list);
+
+
+    
 class Solution {
   public List<List<Integer>> subsets(int[] nums) {
     List<List<Integer>> output = new ArrayList();
@@ -32,7 +50,7 @@ class Solution {
     for (int num : nums) {
       List<List<Integer>> newSubsets = new ArrayList();
       for (List<Integer> curr : output) {
-        newSubsets.add(new ArrayList<Integer>(curr){{add(num);}});
+        newSubsets.add(new ArrayList<Integer>(curr){{add(num);}});     
       }
       for (List<Integer> curr : newSubsets) {
         output.add(curr);
