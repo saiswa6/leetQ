@@ -39,3 +39,27 @@ class Solution {
         return output;
     }
 }
+
+
+
+When it comes to subset, combination, permutation, tree path sum, think of DFS+backtracking.
+Time Complexity: O( n * 2^n )
+Space Complexity: O( n * 2^n )
+   
+Review of DFS + backtracking template
+
+
+def backtrack( parameter ):
+	# Base case handle, aka stop condition
+	if stop condition:
+		# save valid result if needed
+		return
+		
+	# General cases handle:
+	for each possible next move/next selection:
+		
+		make a next move/ select a element	
+		backtrack( updated parameter )		
+		roll back / undo selection
+		
+	return
