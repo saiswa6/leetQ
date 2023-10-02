@@ -10,8 +10,8 @@ dividing it by 10, 1221 / 10 = 122. Then we can get the last digit again by doin
 
 Now the question is, how do we know that we've reached the half of the number?
 
-Since we divided the number by 10, and multiplied the reversed number by 10, when the original number is less than the
-reversed number, it means we've processed half of the number digits.
+//Since we divided the number by 10, and multiplied the reversed number by 10, when the original number is less than the reversed number, it means we've processed half of the number digits.
+               (Original Number < Reverted Number) == Trick to cut off at alf of the digits of number.
 
 Complexity Analysis :
 Time complexity : O(logâ¡10(n))
@@ -19,6 +19,9 @@ We divided the input by 10 for every iteration, so the time complexity is O(logâ
 
 Space complexity : O(1)
 */
+TRICK :
+Since we divided the number by 10, and multiplied the reversed number by 10, when the original number is less than the reversed number, it means we've processed half of the number digits.
+               (Original Number < Reverted Number) == Trick to cut off at alf of the digits of number.
 
 public class Solution {
     public bool IsPalindrome(int x) {
