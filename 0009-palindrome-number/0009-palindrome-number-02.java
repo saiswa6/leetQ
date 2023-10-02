@@ -8,7 +8,12 @@ Same solution on leetcode with Overflow prevention. check that solution.
 
 class Solution {
     public boolean isPalindrome(int x) {
-        if(x < 0)
+        if(x < 0) // Negative number can't be a palindrome.
+        {
+            return false;
+        }
+
+        if(x % 10 == 0) // number ends with o, can't be a palindrome.
         {
             return false;
         }
