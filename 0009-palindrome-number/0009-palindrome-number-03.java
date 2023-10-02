@@ -1,7 +1,5 @@
 /*
-
 Approach 3: Revert half of the number
-
 Algorithm :
 First of all we should take care of some edge cases. All negative numbers are not palindrome, for example: -123 is not a palindrome since the '-' does not equal to '3'. So we can return false for all negative numbers.
 
@@ -22,7 +20,16 @@ Space complexity : O(1)
 TRICK :
 Since we divided the number by 10, and multiplied the reversed number by 10, when the original number is less than the reversed number, it means we've processed half of the number digits.
                (Original Number < Reverted Number) == Trick to cut off at alf of the digits of number.
-
+  Ex : 1331  
+       Original Number   Reverted Number
+       133               1
+       13                13
+    Ex : 12321  
+       Original Number   Reverted Number
+       1232              1
+       123               12
+       12                123
+  
 public class Solution {
     public bool IsPalindrome(int x) {
         // Special cases:
