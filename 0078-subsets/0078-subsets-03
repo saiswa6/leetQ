@@ -65,3 +65,49 @@ Output:
 [2,3], 0 1 1
 [1,2], 1 1 0
 [] 0 0 0
+
+
+LLETCODE SOLUTION USING LIBRARY FUNCTION
+========================================
+class Solution {
+  public List<List<Integer>> subsets(int[] nums) {
+    List<List<Integer>> output = new ArrayList();
+    int n = nums.length;
+
+    for (int i = (int)Math.pow(2, n); i < (int)Math.pow(2, n + 1); ++i) {
+      // generate bitmask, from 0..00 to 1..11
+      String bitmask = Integer.toBinaryString(i).substring(1);
+
+      // append subset corresponding to that bitmask
+      List<Integer> curr = new ArrayList();
+      for (int j = 0; j < n; ++j) {
+        if (bitmask.charAt(j) == '1') curr.add(nums[j]);
+      }
+      output.add(curr);
+    }
+    return output;
+  }
+}
+
+EASY SOLUTION USING LIBRARY FUNCTION
+====================================
+For approach 3, you don't need a fancy trick to create left zero padding. Also it adds additional substring() operation which is unnecessary. You can just calculate the offset based on the binary string generated. For an even better, just do some bit manipulation on the number instead of converting it to a binary string.
+
+    public List<List<Integer>> subsets(int[] nums) {
+        List<List<Integer>> output = new ArrayList<>();
+        int n = nums.length;
+
+        for(int i = 0; i < (int)Math.pow(2, n); i++) {
+            String bitmask = Integer.toBinaryString(i);
+
+            List<Integer> curr = new ArrayList();
+            int offset = n - bitmask.length();
+            for(int j = 0; j < bitmask.length(); j++) {
+                if(bitmask.charAt(j) == '1') {
+                    curr.add(nums[j + offset]);
+                }
+            }
+            output.add(curr);
+        }
+        return output;
+    }
