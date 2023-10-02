@@ -18,6 +18,7 @@ At each step, one takes new integer into consideration and generates new subsets
 
 Complexity Analysis
 Time complexity: O(N×2^N) to generate all subsets and then copy them into output list.
+                 Reason : Because we copy the list of length at most N at the end of every subset. And there are 2^N subsets in total.
 
 Space complexity: O(N×2^N). This is exactly the number of solutions for subsets multiplied by the number N of elements to keep for each subset.
  - For a given number, it could be present or absent (i.e. binary choice) in a subset solution. As as result, for N numbers, we would have in total 2^N choices (solutions).  
