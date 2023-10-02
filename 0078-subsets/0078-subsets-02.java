@@ -22,8 +22,13 @@ class Solution {
 
         for(int i = start; i < n; i++)
         {
+           // 1. Add current choice to our current running list
             curr.add(nums[i]);
+           // 2. Jump into the next level of decision tree
+           // The solution set must not contain duplicate subsets
+           // So here is "i+1", which means the element behind our current choice
             backtrack(i + 1, curr, nums);
+           // 3. Undo current choice
             curr.remove(curr.size() - 1);   // Don't do by curr.remove(nums[i]) because remove method accepts indices only.
         }
     }
