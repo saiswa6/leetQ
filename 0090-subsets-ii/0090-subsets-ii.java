@@ -15,11 +15,10 @@ class Solution {
 
         for(int i=start;i<n;i++)
         {
-            /*if(i>0 && nums[i-1] == nums[i] && i+1 < n)
+            if(i>start && nums[i-1] == nums[i])
             {
-                i++;
-                //continue;
-            }*/
+                continue;
+            }
             curr.add(nums[i]);
             backtrack(i+1, curr, nums);
             curr.remove(curr.size() - 1);
