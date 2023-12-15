@@ -3,7 +3,8 @@ BINARY SEARCH
 T.C : O(nlogn)
 
 Different approach, consider 2 pointers for better complexity
-We iterate through the entire array and initialise the high and low value
+We iterate through the entire array and initialise the high and low value.
+Here, i will be used for left element. and binary search is used to right element.
 We initialise the mid value if low index is lesser than the higher one or vice-versa
 Then we check whether array[i]+arr[mid] == target or not
 In case of duplicated answer, we search only on the right of the left element.
@@ -18,7 +19,7 @@ class Solution {
 	    int high = numbers.length - 1;
             while (low <= high) {
                 int mid = (high - low) / 2 + low;
-                if (numbers[mid] +numbers[i] == target)
+                if (numbers[mid] + numbers[i] == target)
                     return new int[]{i + 1, mid + 1};
                 else if (numbers[mid] + numbers[i] > target) 
                     high = mid - 1;
