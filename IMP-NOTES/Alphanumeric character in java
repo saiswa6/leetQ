@@ -1,0 +1,13 @@
+How to check if a character is alphanumeric in Java with if-else ?
+An alphanumeric character is a character that is either a number or an alphabet. The logic to find out if a character is alphanumeric is listed below:
+
+Is the character greater than or equal to '0' and less than or equal to 9?
+Or is the character greater than or equal to a and less than or equal to z?
+Or is the character greater than or equal to A and less than or equal to Z?
+We can see if a character is an alphanumeric character with these given conditions above.
+
+if ((character >= '0' && character <= '9') || (character >= 'a' && character <= 'z') || (character >= 'A' && character <= 'Z')){
+    // character is alphanumeric
+}else{
+    // character is not alphanumeric
+}
