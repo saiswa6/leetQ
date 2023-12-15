@@ -15,7 +15,7 @@ class Solution {
     public int[] twoSum(int[] numbers, int target) {
          for (int i = 0; i < numbers.length; ++i) {
             int low = i + 1;
-			int high = numbers.length - 1;
+	    int high = numbers.length - 1;
             while (low <= high) {
                 int mid = (high - low) / 2 + low;
                 if (numbers[mid] +numbers[i] == target)
