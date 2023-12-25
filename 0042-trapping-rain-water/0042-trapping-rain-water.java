@@ -10,10 +10,6 @@ class Solution {
             {
                 leftarray[0] = 0;
             }
-            else if(i == 1)
-            {
-                leftarray[1] = height[0];
-            }
             else {
                 leftarray[i] = Math.max(leftarray[i-1], height[i-1]);
             }
@@ -24,10 +20,6 @@ class Solution {
             if(i == length - 1)
             {
                 rightArray[length - 1] = 0;
-            }
-            else if(i == length -2)
-            {
-                rightArray[length - 2] = height[length - 1];
             }
             else {
                 rightArray[i] = Math.max(rightArray[i+1], height[i+1]);
