@@ -14,14 +14,11 @@ class Solution {
                 end--;
             }
 
-            //if (isVowel(sArray[start]) && isVowel(sArray[end])) {
-                char temp = sArray[start];
-                sArray[start] = sArray[end];
-                sArray[end] = temp;
-                start++;
-                end--;
-            //}
- 
+            char temp = sArray[start];
+            sArray[start] = sArray[end];
+            sArray[end] = temp;
+            start++;
+            end--;
          }
 
          return new String(sArray);
