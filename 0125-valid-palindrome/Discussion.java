@@ -29,8 +29,10 @@ class Solution {
         	char currLast = s.charAt(last);
         	if (!Character.isLetterOrDigit(currFirst )) {
         		start++;
+                continue;
         	} else if(!Character.isLetterOrDigit(currLast)) {
         		last--;
+                continue;
         	} else {
         		if (Character.toLowerCase(currFirst) != Character.toLowerCase(currLast)) {
         			return false;
