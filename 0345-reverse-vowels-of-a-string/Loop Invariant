@@ -1,0 +1,59 @@
+A loop invariant is a condition that is true before and after each iteration of a loop. It is a property or a logical statement that remains unchanged during the execution of a loop. Loop invariants are important for reasoning about the correctness of loops and ensuring that the loop achieves its intended purpose.
+
+Here are the key aspects and meanings associated with loop invariants:
+1. Initialization: The loop invariant must be true before the first iteration of the loop. It ensures that the loop begins with a valid state.
+2. Maintenance: The loop invariant must be true before each iteration of the loop. It guarantees that if the invariant holds before an iteration, it will still hold after the iteration, preserving correctness.
+3. Termination: The loop invariant, along with loop conditions, helps prove that when the loop exits, the desired property or goal has been achieved.
+
+Loop invariants are commonly used in formal methods, program verification, and algorithm analysis. They provide a way to reason about the correctness of loops and help ensure that the loop accomplishes its intended purpose without introducing errors.
+
+// Loop Invariant: sum is the sum of the first i elements of the array.
+sum = 0
+for i = 0 to n-1:
+    // Loop Invariant (Initialization): Before the first iteration, sum is 0.
+    
+    sum = sum + array[i]
+    
+    // Loop Invariant (Maintenance): After each iteration, sum is the sum of the first i+1 elements.
+    
+// Loop Invariant (Termination): After the loop, sum is the sum of all elements in the array.
+
+In this example, the loop invariant ensures that sum remains the sum of the elements processed so far at each iteration. This understanding is crucial for verifying the correctness of algorithms and loops in programming.
+
+1. Initialization: Before the first iteration of the loop, the loop invariant holds because sum is initialized to 0.
+2. Maintenance: After each iteration, the loop invariant still holds. The loop updates sum by adding the next element in the array (array[i]). The loop invariant is maintained because sum remains the sum of the first i elements.
+3. Termination: When the loop terminates, the loop invariant ensures that sum is the sum of all elements in the array (array[0] + array[1] + ... + array[n-1]).
+
+The key point is that the loop invariant describes a property that holds true at the beginning of each iteration and is maintained throughout the iteration. It doesn't mean that the variable itself doesn't change; rather, it specifies a relationship or property that holds true despite the changes made within the loop.
+
+
+Some more examples :
+Factorial
+---------
+// Loop Invariant: factorial is the product of the first i positive integers.
+factorial = 1
+for i = 1 to n:
+    // Loop Invariant (Initialization): Before the first iteration, factorial is 1.
+    
+    factorial = factorial * i
+    
+    // Loop Invariant (Maintenance): After each iteration, factorial is the product of the first i positive integers.
+    
+// Loop Invariant (Termination): After the loop, factorial is the product of the first n positive integers (n!).
+
+//Searching in an Array
+// Loop Invariant: found is true if the target is found in the first i elements of the array.
+found = false
+target = // some value to search
+for i = 0 to n-1:
+    // Loop Invariant (Initialization): Before the first iteration, found is false.
+    
+    if array[i] == target:
+        found = true
+        break
+    
+    // Loop Invariant (Maintenance): After each iteration, found is true if the target is found in the first i elements.
+    
+// Loop Invariant (Termination): After the loop, found is true if the target is found in the array.
+
+
