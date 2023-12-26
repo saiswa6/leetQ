@@ -7,12 +7,15 @@ class Solution {
 
         while (start < end)
         {
+            // If left side char is not vowel, increment start++ and go for next element
             if(!isVowel(sarray[start]) && start < end) {
                 start++;
                 continue;
+                // If right side char is not vowel, decrement end-- and go for next element
             } else if (!isVowel(sarray[end]) && start < end) {
                 end--;
                 continue;
+                // when both are vowels, then it comes to this else block. swap them.
             } else {
                 char temp = sarray[start];
                 sarray[start] = sarray[end];
@@ -34,56 +37,3 @@ class Solution {
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* 
-        if(s.length() == 1)
-        {
-            return s;
-        }
-        String first = "";
-        String second = "";
-        int length = s.length();
-        int start = 0;
-        int end = length - 1;
-
-        while(start < end) {
-            while(!isVowel(s.charAt(start)) && start < end ) {
-                first = first + s.charAt(start);
-                start++;
-            }
-            while(!isVowel(s.charAt(end)) && start < end) {
-                second = s.charAt(end) + second;
-                end--;
-            }
-
-            if (isVowel(s.charAt(start)) && isVowel(s.charAt(end))) {
-                first = first + s.charAt(end);
-                second = s.charAt(start)+ second ;
-                start++;
-                end--;
-            }
-
-            if(start + 1 == end) {
-                first += s.charAt(end);
-            }
- 
-         }
-
-         return first + second;
-*/
