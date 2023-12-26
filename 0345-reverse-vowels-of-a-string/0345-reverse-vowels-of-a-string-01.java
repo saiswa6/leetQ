@@ -103,3 +103,11 @@ class Solution {
         return new String(sChar);
     }
 };
+
+
+
+// To find whether char is vowel or not.
+String vowels = "aeiouAEIOU"; vowels.indexOf(word[start]) == -1 --> Not A Good Idea. Use Set instead.
+String vowels = "aeiouAEIOU"; !vowels.contains(chars[start]+"" --> Not A Good Idea. Use Set instead.
+Use a vowel "Set" -  !vowelSet.contains(word[start])
+
