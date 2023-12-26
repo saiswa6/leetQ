@@ -1,0 +1,47 @@
+MEANING OF "strings are immutable in java"
+-------------------------------------------
+
+In Java, when we say that "strings are immutable," it means that the contents of a String object cannot be changed after the object is created. Once a String object is created, you cannot modify the characters in the string. Any operation that appears to modify a string actually creates a new string.
+
+----------------------------------------------------
+Here's an example to illustrate immutability:
+String original = "Hello";
+String modified = original.concat(" World");
+
+System.out.println("Original String: " + original);
+System.out.println("Modified String: " + modified);
+In this example, the concat method is used to concatenate " World" to the original string. However, the original string remains unchanged. The result is a new string (modified) that contains the concatenated value.
+
+This immutability has several implications:
+1. Thread Safety: Since strings are immutable, they can be safely shared among multiple threads without the need for synchronization. This is because once a string is created, its value cannot be changed, eliminating the risk of concurrent modification issues.
+2. Caching: Java can cache string literals, knowing that their values will never change. This allows for more efficient memory usage.
+3. Security: Immutable strings are used in various security-related operations, as their values cannot be altered once created.
+4. Hashing: Strings are often used as keys in hash-based data structures (e.g., HashMap). The immutability ensures that the hash code of a string remains constant throughout its lifetime.
+In summary, the immutability of strings in Java simplifies programming in various contexts, enhances thread safety, and allows for more predictable and secure behavior in certain scenarios.
+
+
+
+********************************************************************
+In Java, Convert a char array to a string using the String constructor that takes a char array as an argument. Here's an example:
+
+Java Code
+public class CharArrayToStringExample {
+    public static void main(String[] args) {
+        // Sample char array
+        char[] charArray = {'H', 'e', 'l', 'l', 'o'};
+
+        // Using the String constructor to convert char array to string
+        String resultString = new String(charArray);
+
+        // Print the result
+        System.out.println("Resulting String: " + resultString);
+    }
+}
+In this example, the charArray is converted to a string using the new String(charArray) constructor. The resulting string will contain the characters from the char array.
+
+*********************************************************************
+
+- When you use charArray.toString() in Java, you're actually invoking the toString() method on the array object, not converting the characters in the array to a string. The default implementation of toString() for arrays in Java does not provide a meaningful representation of the elements within the array.
+
+- If you use charArray.toString(), you will get a representation of the array object itself, not the content of the array as a string.
+
