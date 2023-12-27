@@ -1,3 +1,16 @@
+/*valueMatchPointer shall stop when value matches with given value in method.
+valueDisMatchPointer shall stop when value does not matches with given value in method.
+    Then do swap.
+    Scenario might fail at situation when valueMatchPointer and valueDisMatchPointer are equal because we are not sure whether value at valueMatchPointer equals given value or not. 
+Ex : 3, 2, 2, 3            val 3
+     0  1  2  3
+     VM        VD
+      0         3
+      0         2
+      1         1 ===> here, we have to make decision, so kept if block.
+
+      */
+
 class Solution {
     public int removeElement(int[] nums, int val) {
         if(nums.length == 1) {
@@ -30,7 +43,11 @@ class Solution {
 }
 
 
-/*
+//2ND SOLUTION
+===============
+
+class Solution {
+    public int removeElement(int[] nums, int val) {
         if(nums.length == 0)
         {
             return 0;
@@ -69,4 +86,5 @@ class Solution {
                 nums[secondMatchIndex] = swap;
             }
         return notEqualAns;
- */
+            }
+}
