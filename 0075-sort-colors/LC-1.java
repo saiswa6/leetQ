@@ -10,6 +10,8 @@ Algorithm :
 - Initialise the leftmost boundary of twos: p2 = n - 1. During the algorithm execution nums[idx > p2] = 2.
 - Initialise the index of the current element to consider: curr = 0.
 
+For images, refer to https://leetcode.com/problems/sort-colors/editorial/
+
 While curr <= p2 :
  - If nums[curr] = 0: swap currth and p0th elements and move both pointers to the right.
  - If nums[curr] = 2: swap currth and p2th elements. Move pointer p2 to the left.
