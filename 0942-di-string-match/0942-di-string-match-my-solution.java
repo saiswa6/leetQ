@@ -6,7 +6,14 @@
 I D I D
 0,3,1,4,2
 l r l r l==r
+
+Input: "DDI"
+Output: [3,2,0,1]
+-------> DD I
+Remember If S[i] == 'I', then A[i] < A[i+1]. So 3rd element in Array A should be less than 4th element of Array A.
 */
+
+
 
 
 class Solution {
