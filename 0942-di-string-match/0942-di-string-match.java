@@ -5,10 +5,11 @@ class Solution {
         int left = 0;
         int right = length;
         int resultPointer = 0;
+        char tempArray[] = s.toCharArray();
 
         int i = 0;
         while (left < right) {
-            if(s.charAt(i) == 'I') {
+            if(tempArray[i] == 'I') {
                 result[resultPointer] = left++;
                 resultPointer++;
             } else {
