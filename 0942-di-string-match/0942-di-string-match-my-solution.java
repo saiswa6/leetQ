@@ -1,3 +1,8 @@
+// Observe the pattern
+// If starting char in string is I, then 0 (left). Then itertively, if I -> left
+// If starting char in string is D, then n (right). Then itertively, if D -> right
+
+
 class Solution {
     public int[] diStringMatch(String s) {
         int length = s.length();
@@ -9,16 +14,16 @@ class Solution {
 
         int i = 0;
         while (left < right) {
-            if(tempArray[i] == 'I') {
+            if(tempArray[i] == 'I') {   // I -> left
                 result[resultPointer] = left++;
                 resultPointer++;
-            } else {
+            } else {                    // D -> right
                 result[resultPointer] = right--;
                 resultPointer++;
             }
             i++;            
         }
-        result[resultPointer] = left;
+        result[resultPointer] = left;    // this is when left == right and last left element.
 
         return result; 
     }
