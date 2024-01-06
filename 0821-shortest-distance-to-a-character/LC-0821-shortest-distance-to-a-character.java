@@ -11,6 +11,12 @@ We take the minimum of these two answers to create our final answer.
 Complexity Analysis
 Time Complexity: O(N), where N is the length of S. We scan through the string twice.
 Space Complexity: O(N), the size of ans.
+
+Integer overflow, for case when going left and c is not found yet,
+lets say prev = INT_MIN and
+ans[i] = min(ans[i] , i-prev);
+here i-prev is = i- INT_MIN = i - (-2147483647) = i+2147483647 , can be overflowed.
+That's why / 2 is done 
 */
 
 class Solution {
