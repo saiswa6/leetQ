@@ -1,0 +1,38 @@
+/*
+Approach #1: Min Array [Accepted]
+Intuition
+For each index S[i], let's try to find the distance to the next character C going left, and going right. The answer is the minimum of these two values.
+
+Algorithm
+When going left to right, we'll remember the index prev of the last character C we've seen. Then the answer is i - prev.
+When going right to left, we'll remember the index prev of the last character C we've seen. Then the answer is prev - i.
+We take the minimum of these two answers to create our final answer.
+
+Complexity Analysis
+Time Complexity: O(N), where N is the length of S. We scan through the string twice.
+Space Complexity: O(N), the size of ans.
+*/
+
+class Solution {
+    public int[] shortestToChar(String s, char c) {
+        int length = s.length();
+        int ans [] = new int[length];
+        int prev = Integer.MIN_VALUE / 2 ;
+        for(int i = 0; i < length ; i++) {
+            if(s.charAt(i) == c) {
+                prev = i;
+            }
+            ans[i] = i - prev;
+        }
+
+        prev = Integer.MAX_VALUE / 2 ;
+        for(int j = length - 1;j >= 0; j--) {
+            if(s.charAt(j) == c) {
+                prev = j;
+            }
+            ans[j] = Math.min(ans[j], prev - j);
+        }
+
+        return ans;
+    }
+}
