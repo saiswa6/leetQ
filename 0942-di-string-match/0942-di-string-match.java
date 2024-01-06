@@ -11,7 +11,7 @@ class Solution {
             if(s.charAt(i) == 'I') {
                 result[resultPointer] = left++;
                 resultPointer++;
-            } else if (s.charAt(i) == 'D') {
+            } else {
                 result[resultPointer] = right--;
                 resultPointer++;
             }
