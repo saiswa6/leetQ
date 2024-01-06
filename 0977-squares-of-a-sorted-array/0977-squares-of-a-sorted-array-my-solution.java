@@ -7,18 +7,18 @@ class Solution {
         int pointer = length - 1;
 
         while(start <= end) {
-            if (start == end) {
+            if (start == end) { // take care of edge case, when single element left
                 result[pointer] = nums[start] * nums[start];
                 start++;
-            } else if (absolute(nums[start]) < absolute(nums[end])) {
+            } else if (absolute(nums[start]) < absolute(nums[end])) { //when less than
                 result[pointer] = nums[end] * nums[end];
                 end--;
                 pointer--;
-            } else if (absolute(nums[start]) > absolute(nums[end])) {
+            } else if (absolute(nums[start]) > absolute(nums[end])) { // when greater than
                 result[pointer] = nums[start] * nums[start];
                 start++;
                 pointer--;
-            } else {
+            } else {                                                 // when teo equal elements come on both left amd right
                 result[pointer] = nums[start] * nums[start];
                 pointer--;
                 result[pointer] = nums[start] * nums[start];
@@ -30,7 +30,7 @@ class Solution {
         return result;
     }
 
-    public int absolute(int num) {
+    public int absolute(int num) {         // returns absolute of a number
         if (num < 0) {
             return num * -1;
         }
