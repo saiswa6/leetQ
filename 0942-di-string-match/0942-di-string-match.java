@@ -7,11 +7,8 @@ class Solution {
         int resultPointer = 0;
 
         int i = 0;
-        while (left <= right) {
-            if (left == right) {
-                result[resultPointer] = left;
-                break;
-            } else if(s.charAt(i) == 'I') {
+        while (left < right) {
+            if(s.charAt(i) == 'I') {
                 result[resultPointer] = left++;
                 resultPointer++;
             } else if (s.charAt(i) == 'D') {
@@ -20,6 +17,7 @@ class Solution {
             }
             i++;            
         }
+        result[resultPointer] = left;
 
         return result; 
     }
