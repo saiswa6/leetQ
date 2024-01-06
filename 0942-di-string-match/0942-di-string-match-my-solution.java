@@ -2,6 +2,12 @@
 // If starting char in string is I, then 0 (left). Then itertively, if I -> left
 // If starting char in string is D, then n (right). Then itertively, if D -> right
 
+/*
+I D I D
+0,3,1,4,2
+l r l r l==r
+*/
+
 
 class Solution {
     public int[] diStringMatch(String s) {
