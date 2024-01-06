@@ -8,6 +8,11 @@ Take care about edge cases
 Ex ccc -> 0
    cbc -> 1
 
+We can simplify the pointer logic a bit by remembering the last matched character. So we have two cases
+
+if s[i] eqals to the last deleted character, the result is zero. We "ate" the whole string.
+Otherwise, the result is j - i + 1.
+
 Complexity
 Time complexity:
 O(n)
