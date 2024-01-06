@@ -4,7 +4,7 @@ class Solution {
         int oddPointer = 1;
         int length = nums.length;
         while (evenPointer < length || oddPointer < length) {   /// careful with this condition
-            if (evenPointer < length && nums[evenPointer] % 2 == 0) {  // evenPointer will continue till even nums at even index exists and stops at odd place.
+            if (evenPointer < length && nums[evenPointer] % 2 == 0) {  // evenPointer will continue till even nums at even index exists and stops at odd place. Think evenPointer < lengt may not be needed if && is putin while condition
                 evenPointer+=2;
             } else if (oddPointer < length && nums[oddPointer] % 2 != 0) { // oddPointer will continue till odd nums at even index exists and stops at even place.
                 oddPointer+=2;
