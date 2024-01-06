@@ -6,10 +6,7 @@ class Solution {
         }
         int answer = -1;
         int left = 0, right = length - 1;
-        while(left <= right) {
-            if (right - left == 0) {
-                answer = 1;
-            }
+        while(left < right) {
             if(s.charAt(left) == s.charAt(right)) {
                 char toRemove = s.charAt(left);
                 left++;
