@@ -33,3 +33,15 @@ class Solution {
     }
   }
 }
+
+//Intuition
+/*I don't understand the algorithm fully using numbers until I started thinking in terms of characters and words.
+Imagine if each number were a character and you have
+[h,e,l,l,o,w,a,r,l,o,r,d]
+
+Let's say you want to rotate by 7 (k = 7)
+effectively you are moving "hello" to the end and "warlord" to the front.
+
+so you reverse all the characters [d,r,o,l,r,a,w,o,l,l,e,h]
+then you reverse the individual words( 0-6 then 7-12 chars) and you get [w,a,r,l,o,r,d,h,e,l,l,o]
+Note I purposely didn't use "helloworld" because both words are 5 chars long and I wanted the two words that have different lengths.*/
