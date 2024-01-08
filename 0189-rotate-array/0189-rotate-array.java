@@ -4,13 +4,13 @@ class Solution {
         if (length == 1) {
             return ;
         }
-        k = k % length ; 
-        rotate(nums, 0,length-k-1);
-        rotate(nums, length-k, length-1);
-        rotate(nums, 0, length - 1);
+        k = k % length; 
+        reverse(nums, 0, length - 1);
+        reverse(nums, 0, k-1);
+        reverse(nums, k, length-1);
     }
 
-    public void rotate(int nums[], int start, int end) {
+    public void reverse(int nums[], int start, int end) {
         while(start < end) {
             int temp = nums[start];
             nums[start++] = nums[end];
