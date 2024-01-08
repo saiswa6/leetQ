@@ -8,6 +8,8 @@ For each row:
 
 Why is value of empty changed to c-1 if current cell contains obstacle?
 The stone at row = 0 col = 3 will move to row = 0 col = 4. But The stone at row = 0 col = 0 cannot move past obstacle. So it can only move to row = 0 col = 1.
+
+ T.C : O(MN)
   */
 class Solution {
     public char[][] rotateTheBox(char[][] box) {
