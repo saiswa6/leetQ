@@ -66,13 +66,34 @@ class Solution:
 }
 
 
-///
-
-public void duplicateZeros(int[] a) {
-  int i = 0, sh = 0;
-  for (i = 0; sh + i < a.length; ++i) sh += a[i] == 0 ? 1 : 0;
-  for (i = i - 1; sh > 0; --i) {
-    if (i + sh < a.length) a[i + sh] = a[i];
-    if (a[i] == 0) a[i + --sh] = a[i];
+/*
+First pass to count the number of 0's.
+Second pass is to write in the values in appropriate locations, moving from right to left (backwards from the usual), in which the write pointer initially extends outside of the length of the array (as if it was the full sized array without erasing values in the shift).
+*/
+  /*
+  O(n) runtime
+  O(1) space
+  */
+  public void duplicateZeros(int[] A) {
+    
+    int n = A.length, count = 0;
+    
+    for (int num : A) if (num == 0) count++;
+    int i = n - 1;
+    int write = n + count - 1;
+    
+    while (i >= 0 && write >= 0)  {
+      
+      if (A[i] != 0) { // Non-zero, just write it in
+        if (write < n) A[write] = A[i];
+        
+      } else { // Zero found, write it in twice if we can
+        if (write < n) A[write] = A[i];
+        write--;
+        if (write < n) A[write] = A[i];
+      }
+      
+      i--;
+      write--;
+    }
   }
-}
