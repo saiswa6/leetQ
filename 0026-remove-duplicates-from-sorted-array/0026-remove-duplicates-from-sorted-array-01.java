@@ -19,13 +19,12 @@ From the condition, we can have a few observations here,
 - We need to update the first k elements in an array with unique values and return the value of k.
 
 Using the following intuition, let's understand how to address this problem.
-
-The problem states that we need to fill the first k elements of an array with unique values.
-For doing so, we modify the input array in-place so that we don't use extra space.
-In order to perform in-place operations, we use the Two indexes approach
-The first index updates the value in our input array while reading the data from the second index
-First Index is responsible for writing unique values in our input array, while Second Index will read the input array and pass all the distinct elements to First Index.
-We continue the above steps until the second index reaches the end of an array
+-> The problem states that we need to fill the first k elements of an array with unique values.
+-> For doing so, we modify the input array in-place so that we don't use extra space.
+-> In order to perform in-place operations, we use the Two indexes approach
+-> The first index updates the value in our input array while reading the data from the second index
+    First Index is responsible for writing unique values in our input array, while Second Index will read the input array and pass all the distinct elements to First Index.
+-> We continue the above steps until the second index reaches the end of an array
 */
 
 //MY SOLUTION
