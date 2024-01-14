@@ -35,8 +35,8 @@ class Solution {
            return 0;
         }
         int n = nums.length;
-        int writer = 0, reader = 0;
-        for(; reader< n ; reader++)
+        int writer = 0, reader = 0; // Problem with this approach is array has to contain 1 element or first if condition for length is needed. Otherwise, it will fail for zero elements.
+        for(; reader< n ; reader++) // writer maintains unique elements of array, reader maintains till last element of array.
         {
             //when a new element is encountered, update writer pointer.
             if(nums[reader] != nums[writer])
