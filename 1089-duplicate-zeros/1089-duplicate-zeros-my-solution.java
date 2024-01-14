@@ -4,10 +4,10 @@ class Solution {
         int start = 0;
         int end = arr.length - 1;
         while (start <= end) {
-            if(arr[start] == 0 && start == end) {
-                arr[lastIndex--] = 0;
+            if(arr[start] == 0 && start == end) { // Edge case: when zero is left on last zero. No place for that to have a duplicate.
+                arr[lastIndex--] = 0; // So, reduce lastIndex to lastIndex--. 
                 end--;
-            } else if(arr[start] == 0) {
+            } else if(arr[start] == 0) { // reduce from end when zero is hit for duplicate.
                 end--;
             }
             start++;
@@ -15,7 +15,7 @@ class Solution {
 
         int preEndIndex = end;
         
-        while(lastIndex >= 0 && preEndIndex >= 0) {
+        while(lastIndex >= 0 && preEndIndex >= 0) { // when lastIndex and preEndIndex are confirmed , will start writing elements from right to left.
             if(arr[preEndIndex] != 0) {
                 arr[lastIndex--] = arr[preEndIndex--];
             } else {
