@@ -25,3 +25,5 @@ public int removeDuplicates(int[] nums) {
         if (i < 2 || n > nums[i-2]) nums[i++] = n;
     return i;
 }
+
+//If question is to put k elements in order, then replace 2 with k.
