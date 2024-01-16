@@ -27,11 +27,12 @@ class Solution {
                     //prev = mHead.next;
                 }
             } else {
-                if(prev == null) {
+                prev = mHead;
+                /*if(prev == null) {
                     prev = mHead;
                 } else {
                     prev = mHead;
-                }
+                }*/
             }
 
             mHead = mHead.next;
