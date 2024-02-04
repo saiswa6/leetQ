@@ -37,3 +37,43 @@ class Solution {
         return answer;
     }
 }
+
+// Better version of above solution
+
+class Solution {
+public:
+    int findTheDistanceValue(vector<int>& arr1, vector<int>& arr2, int d) {
+        int size1= arr1.size(), size2= arr2.size();
+        int res = size1;
+        for(int i = 0; i < size1; i ++) {
+            for(int j = 0; j < size2; j ++) {
+                if(abs(arr1[i] - arr2[j]) <= d) {
+                    res --;
+                    break;     // break when one conditon satisfy, reduce no of iterations
+                }
+            }
+        }
+        return res;
+    }
+};
+
+// 3 rd similar solution
+    public int findTheDistanceValue(int[] arr1, int[] arr2, int d) {
+        int count = 0;
+        for(int num: arr1) {
+            if(check(arr2, num, d)) {
+                count ++;
+            }
+        }
+        return count;
+    }
+
+    public boolean check(int[] arr2, int num, int d) {
+        for(int n: arr2) {
+            if(Math.abs(n - num) <= d) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
