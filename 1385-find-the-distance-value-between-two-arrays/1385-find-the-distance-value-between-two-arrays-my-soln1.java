@@ -1,3 +1,21 @@
+/*
+Understand Question
+
+I spent a lot of time testing different implementations and trying to deal with errors, before I realized that the question itself isn't properly phrased. The example too is opaque unless you already know the answer.
+You're supposed to count the elements in arr1 that do NOT yield a value <= d when any element from arr2 is subtracted from it. To explain the example;
+
+arr1[0] = 4 doesn't violate the condition. Hence, we count it.
+arr1[1] = 5 also doesn't violate the condition. We also count it, bringing our count to two.
+arr1[8] = 8 violates the condition, so it isn't counted.
+
+Since that's the end of arr1, the total number of GOOD numbers we have is 2. That's why the output is 2
+
+- We are returning the number of elements in arr1 where all of its distances are MORE THAN than d.
+- Calculate the distance between arr1[i] and arr2[j] and find the number of elements in arr1 where it's distances are NOT LESS THAN or EQUAL TO d.
+*/
+
+
+
 class Solution {
     public int findTheDistanceValue(int[] arr1, int[] arr2, int d) {
         int answer = 0;
