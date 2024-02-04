@@ -71,3 +71,78 @@ class Solution {
 
 //TC O(mlogn)
 //SC O(min(m,n))
+
+
+================================================================================================================
+    /*
+nums1 = [1,2,2,1], nums2 = [2,2]
+
+1,1,2,2
+2,2
+
+nums1 = [4,9,5], nums2 = [9,4,9,8,4]
+
+4,4,8,9,9
+4,5,9
+
+
+--
+
+main idea:
+
+using binary search, search for the elements of the smallest array (nums1) in the largest array (nums2)
+
+sort the largest array o that binary search is feasible
+sort the smallest array so that we can seach sequentially
+
+if element is found,
+	keep searching to the left until we find the first occurrence of the element
+
+	add element to the result
+
+when element is found, keep track of the last index where element was found so that next binary search ignores previous used indexes
+	ie. nums1 = 1,1   nums2 = 1,2,2 - output should be [1] - once we found first 1 at index 0 and next search is done as of index 1
+
+*/
+public int[] intersect(int[] nums1, int[] nums2) {
+	if(nums2.length < nums1.length){
+		return intersect(nums2, nums1);
+	}
+
+	Arrays.sort(nums1);
+	Arrays.sort(nums2);
+
+	List<Integer> result = new ArrayList<>();
+	int leftIndex = 0;
+	for(int num: nums1){
+		int index = binarySearch(nums2, num, leftIndex);
+
+		if(index != -1){
+			result.add(num);
+			leftIndex = index + 1;
+		}
+	}
+
+	return result.stream().mapToInt(Integer::intValue).toArray();
+}
+
+private int binarySearch(int[] nums, int target, int left){
+	int right = nums.length - 1;
+	int index = -1;
+
+	while(left <= right){
+		int middle = left + (right - left) / 2;
+
+		if(nums[middle] == target){
+			index = middle;
+
+			right = middle - 1;
+		} else if(nums[middle] > target){
+			right = middle - 1;
+		} else {
+			left = middle + 1;
+		}
+	}
+
+	return index;
+}
