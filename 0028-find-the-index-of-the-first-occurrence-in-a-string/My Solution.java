@@ -1,5 +1,6 @@
 // WRONG SOLUTION
 // This solution is failing in case of missississpi and needle issipi
+// Example: Let haystack be "mississippi" and needle be “issipi”. 
 class Solution {
     public int strStr(String haystack, String needle) {
         int hayLength = haystack.length();
