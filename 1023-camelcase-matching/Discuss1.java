@@ -11,6 +11,11 @@ If this pattern matches, j should equal length of pattern at the end.
 Possible improvement, special thanks to @Sithis:
 1. Use new ArrayList<>(queries.length) to allocate capacity up-front. This can avoid resizing and copying as the size of the array grows.
 2. queryArr[i] >= 'A' && queryArr[i] <= 'Z' can be replaced by built-in static method Character.isUpperCase().
+
+Note: It might seem wrong to match the first character that matches pattern rather than one that occurs later, but it doesn't make a difference as we can add lowercase letters at any index thus we pick the first matched letter.
+eg: pattern="NoT" query="NropoT"
+
+We can pick either the first 'o' from query to match the pattern or the second 'o', it doesn't matter which one we choose in this case and hence the solution above works. We pick the first 'o' and wait for the next letter to match the pattern and consider all other lowercase letters in beween as injected.
 */
 
 class Solution {
