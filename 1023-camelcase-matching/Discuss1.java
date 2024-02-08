@@ -1,5 +1,5 @@
 /*
-Approach 1 : Check Subsequence
+Approach 1 : Check Subsequence (2 Pointers)
 For each string, macth it with the pattern and pass the result.
 
 The match process uses i for query pointer and j for pattern pointer, each iteration;
