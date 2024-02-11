@@ -1,3 +1,4 @@
+
 class Solution {
     public int lengthOfLongestSubstringTwoDistinct(String s) {
         int left = 0;
