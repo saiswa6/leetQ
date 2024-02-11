@@ -1,3 +1,5 @@
+// Sliding Windows Pattern
+
 class Solution {
     public int findMaxConsecutiveOnes(int[] nums) {
         int left = 0;
