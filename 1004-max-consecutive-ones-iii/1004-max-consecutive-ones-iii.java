@@ -18,9 +18,9 @@ class Solution {
                 left++;
             }
 
-            answer = Math.max(answer, right - left + 1);
+            //answer = Math.max(answer, right - left + 1);
         }
 
-        return answer;
+        return right-left;
     }
 }
