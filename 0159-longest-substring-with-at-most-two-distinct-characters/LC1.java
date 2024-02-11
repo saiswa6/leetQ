@@ -81,3 +81,32 @@ The min() method of Java Collections class is used to get the minimum element of
 /*
   I found this statement confusing "delete the leftmost character". Its actually not considering the left most character in the sliding window but in hash map(after sorting based on last seen index of the character). For example "eceba" is the given input. If we just consider the first character inserted in hash map then actually 'e' will be removed when encounter more than 2 distinct characters in string. But in fact we remove 'c' from hash map.
   */
+
+// Discuss Solution
+public class Solution {
+    public int lengthOfLongestSubstringTwoDistinct(String s) {
+        if(s.length() < 1) return 0;
+        HashMap<Character,Integer> index = new HashMap<Character,Integer>();
+        int lo = 0;
+        int hi = 0;
+        int maxLength = 0;
+        while(hi < s.length()) {
+            if(index.size() <= 2) {
+                char c = s.charAt(hi);
+                index.put(c, hi);
+                hi++;
+            }
+            if(index.size() > 2) {
+                int leftMost = s.length();
+                for(int i : index.values()) {
+                    leftMost = Math.min(leftMost,i);
+                }
+                char c = s.charAt(leftMost);
+                index.remove(c);
+                lo = leftMost+1;
+            }
+            maxLength = Math.max(maxLength, hi-lo);
+        }
+        return maxLength;
+    }
+}
