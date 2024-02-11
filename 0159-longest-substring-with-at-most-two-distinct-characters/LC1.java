@@ -75,3 +75,9 @@ Java Collections min(coll) Method
 It is the collection whose minimum element is to be determined.
 The min() method of Java Collections class is used to get the minimum element of the given collection, according to the natural ordering of its elements.
 */
+
+
+
+/*
+  I found this statement confusing "delete the leftmost character". Its actually not considering the left most character in the sliding window but in hash map(after sorting based on last seen index of the character). For example "eceba" is the given input. If we just consider the first character inserted in hash map then actually 'e' will be removed when encounter more than 2 distinct characters in string. But in fact we remove 'c' from hash map.
+  */
