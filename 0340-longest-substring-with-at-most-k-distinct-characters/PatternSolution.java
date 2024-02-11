@@ -1,3 +1,5 @@
+// Sliding Window Pattern Solution
+
 class Solution {
     public int lengthOfLongestSubstringKDistinct(String s, int k) {
         int left = 0;
@@ -15,7 +17,7 @@ class Solution {
                 distinctChars++;
             }
 
-            while(distinctChars > k) {
+            while(distinctChars > k) {  // 159 Question, just replace 2 by k.
                 char leftChar = s.charAt(left);
                 int count = hashMap.get(leftChar);
 
