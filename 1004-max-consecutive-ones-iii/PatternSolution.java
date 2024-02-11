@@ -1,3 +1,5 @@
+
+//Sliding Windows Pattern Solution
 class Solution {
     public int longestOnes(int[] nums, int k) {
         int left = 0;
@@ -10,7 +12,7 @@ class Solution {
                 zeroCount++;
             }
 
-            if(zeroCount > k) 
+            while(zeroCount > k) 
             {
                 if(nums[left] == 0) {
                     zeroCount--;
@@ -18,9 +20,9 @@ class Solution {
                 left++;
             }
 
-            //answer = Math.max(answer, right - left + 1);
+            answer = Math.max(answer, right - left + 1);
         }
 
-        return right-left;
+        return answer;
     }
 }
