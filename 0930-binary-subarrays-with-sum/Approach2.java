@@ -4,6 +4,12 @@ We have done this hundreds time.
 
 It's because "number of windows with exactly k something in it" = "number of windows with at most k something in it" - "number of windows with at most k - 1 something in it".
 
+
+Intution :
+This is my understanding of the sliding window solution. If there is anything wrong, please point it out.
+atMost(A, S) counts the number of the subarrays of A the sum of which is at most(less than or equal to) S. Therefore, we can use atMost(A, S) - atMost(A, S - 1) to get the number of the subarrays the sum of which is exactly S.
+In the atMost function, the i to j window represents the subarrays. We use the j pointer to expand the window, when the sum of all numbers in the window is bigger than S, it's time for us to move the i pointer to shorten the window. Through this process, we can count the number of the subarrays.
+
 Space O(1)
 Time O(N)
 */
