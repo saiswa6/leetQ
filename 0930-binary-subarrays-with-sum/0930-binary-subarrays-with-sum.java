@@ -16,7 +16,7 @@ class Solution {
                 sum -= nums[left];
                 left++;
             }
-            answer = answer + (right - left);
+            answer = answer + (right - left + 1);
         }
         return answer;
     }
