@@ -1,3 +1,7 @@
+// Time Complexity: O(N) where N is the length of strings s, t
+// Space Complexity: O(N) for diff
+// Note: O(1) space can be achieved if we don't create the diff array - we can just get the values on the fly.
+
 class Solution {
     public int equalSubstring(String s, String t, int maxCost) {
 
