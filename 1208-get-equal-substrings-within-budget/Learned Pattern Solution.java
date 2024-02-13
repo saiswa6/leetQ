@@ -1,23 +1,14 @@
 class Solution {
     public int equalSubstring(String s, String t, int maxCost) {
 
-        /*int n = s.length(), i = 0, j;
-        for (j = 0; j < n; ++j) {
-            maxCost -= Math.abs(s.charAt(j) - t.charAt(j));
-            if (maxCost < 0) {
-                maxCost += Math.abs(s.charAt(i) - t.charAt(i));
-                ++i;
-            }
-        }
-        return j - i;
-        */
+        // Non - shrinkable version
         int left = 0;
         int right = 0;
         int answer = 0;
         int sum = 0;
         int length = s.length();
         int cost [] = new int [length];
-        for(int i = 0; i < length ; i++) {
+        for(int i = 0; i < length ; i++) { // calculate the cost and keep in array , so that time complexity reduces little.
             cost[i] = Math.abs(s.charAt(i) - t.charAt(i));
         }
 
@@ -38,6 +29,7 @@ class Solution {
 
 
 /*
+// Shrinkable Version 
         int left = 0;
         int right = 0;
         int answer = 0;
