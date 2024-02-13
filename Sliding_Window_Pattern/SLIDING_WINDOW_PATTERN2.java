@@ -1,3 +1,6 @@
+// Link : https://leetcode.com/problems/count-vowel-substrings-of-a-string/solutions/1563765/c-o-n-time-sliding-window-at-most-to-equal-trick/
+
+
 /*
 🌟 Sliding Window "At Most to Equal" trick
 NOTE: this is an extension to my "C++ Maximum Sliding Window Cheatsheet Template!". Please make sure you are familiar with this template first.
