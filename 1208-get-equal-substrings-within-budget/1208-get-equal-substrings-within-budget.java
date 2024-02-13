@@ -29,10 +29,10 @@ class Solution {
                 left++;
             }
 
-            answer = Math.max(right - left + 1, answer);
+            //answer = Math.max(right - left + 1, answer);
         }
 
-        return answer;
+        return right - left;
         
 
 
