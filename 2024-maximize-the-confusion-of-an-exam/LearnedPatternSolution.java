@@ -1,4 +1,6 @@
 class Solution {
+
+    // Non-Shrinkable Version
     public int maxConsecutiveAnswers(String answerKey, int k) {
         int fLeft = 0;
         int tLeft = 0;
@@ -32,7 +34,7 @@ class Solution {
         }
         return Math.max(right - fLeft , right - tLeft);
 
-
+// Shrinkable Version
         /*
         int fLeft = 0;
         int tLeft = 0;
