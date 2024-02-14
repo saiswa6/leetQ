@@ -44,3 +44,12 @@ public int firstBadVersion(int n) {
     }
     return left;
 }
+
+/*
+ - got TLE five times becaues I use (left + right) / 2,now I know why should use left + (right - left) / 2.
+   Because (left + right) / 2 can exceed the integer limit whereas left + (right - left)/2 doesn't exceed the integer bounds.
+   Ex : start = 2147483647
+   end = 2147483647
+   mid using (start + end)/2 = -1
+   mid using start + (end - start)/2 = 2147483647
+*/
