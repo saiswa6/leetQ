@@ -53,3 +53,9 @@ public int firstBadVersion(int n) {
    mid using (start + end)/2 = -1
    mid using start + (end - start)/2 = 2147483647
 */
+
+/*
+Rookies use mid = (left+right)/2
+Veterans use mid = left + (right - left) / 2
+Gurus use mid = left+((right-left)>>1)
+*/
