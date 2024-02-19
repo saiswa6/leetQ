@@ -26,3 +26,18 @@ class Solution {
     return (int)x1;
   }
 }
+
+/*
+Compare Approaches 2, 3 and 4
+Here we have three algorithms with a time performance O(log⁡N) and it's a bit confusing.
+
+Which one is performing fewer iterations?
+The best one is Newton's method.
+
+*/
+
+/*
+mid > x/mid instead of (long)mid*mid > x to avoid type casting to long
+
+
+*/
