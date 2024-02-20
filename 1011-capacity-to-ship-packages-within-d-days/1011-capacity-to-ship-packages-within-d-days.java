@@ -4,6 +4,13 @@ class Solution {
     public int shipWithinDays(int[] weights, int days) {
         calculateBoundaries(weights);
 
+        if(days == 1){
+            return sumWeight;
+        }
+        if(days == weights.length){
+            return maxWeight;
+        }
+
         int left = maxWeight;
         int right = sumWeight;
 
