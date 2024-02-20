@@ -1,3 +1,5 @@
+//Very similar to LC 1011 and LC 410 mentioned above. Let's design a feasible function, given an input speed, determine whether Koko can finish all bananas within H hours with hourly eating speed speed. Obviously, the lower bound of the search space is 1, and upper bound is max(piles), because Koko can only choose one pile of bananas to eat every hour.
+
 class Solution {
     public int minEatingSpeed(int[] piles, int h) {
         int left = 1;
@@ -21,7 +23,7 @@ class Solution {
     public boolean feasible(int[] piles, int speed, int h) {
         int hours = 0;
         for(int pile : piles) {
-            hours += (pile/speed) + (pile%speed != 0 ? 1 : 0);
+            hours += (pile/speed) + (pile%speed != 0 ? 1 : 0); // If ceil fn is used, it will take more time
             if(hours > h) {
                 return false;
             }
