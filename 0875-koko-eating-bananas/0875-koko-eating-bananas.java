@@ -22,6 +22,9 @@ class Solution {
         int hours = 0;
         for(int pile : piles) {
             hours += Math.ceil((double)pile/speed);
+            if(hours > h) {
+                return false;
+            }
         }
         return hours <= h;
     }
