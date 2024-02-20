@@ -21,7 +21,7 @@ class Solution {
     public boolean feasible(int[] piles, int speed, int h) {
         int hours = 0;
         for(int pile : piles) {
-            hours += Math.ceil((double)pile/speed);
+            hours += (pile/speed) + (pile%speed != 0 ? 1 : 0);
             if(hours > h) {
                 return false;
             }
