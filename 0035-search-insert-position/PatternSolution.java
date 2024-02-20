@@ -1,5 +1,6 @@
 class Solution {
     public int searchInsert(int[] nums, int target) {
+        // Pattern Solution
         int left = 0 , right = nums.length;
 
         while(left < right) {
@@ -12,6 +13,9 @@ class Solution {
             }
         }
         return left;
+
+
+        // Own Soltion
 
         /*int len = nums.length;
         int num = 0;
