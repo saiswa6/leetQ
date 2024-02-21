@@ -1,3 +1,18 @@
+// Now that we've solved three advanced problems above, this one should be pretty easy to do. The monotonicity of this problem is very clear: if we can make m bouquets after waiting for d days, then we can definitely finish that as well if we wait for more than d days.
+
+/*
+Intuition
+If m * k > n, it impossible, so return -1.
+Otherwise, it's possible, we can binary search the result.
+left = 1 is the smallest days,
+right = 1e9 is surely big enough to get m bouquests.
+So we are going to binary search in range [left, right].
+
+Complexity
+Time O(Nlog(maxA))
+Space O(1)
+*/
+
 class Solution {
     public int minDays(int[] bloomDay, int m, int k) {
         int length = bloomDay.length; 
