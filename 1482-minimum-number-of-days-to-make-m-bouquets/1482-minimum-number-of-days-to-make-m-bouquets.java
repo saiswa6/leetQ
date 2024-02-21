@@ -8,6 +8,7 @@ class Solution {
         int left = 1, right = 1;
         for(int i=0; i < length; i++) {
             right = Math.max(right, bloomDay[i]);
+            left = Math.min(left, bloomDay[i]);
         }
 
         while(left < right) {
