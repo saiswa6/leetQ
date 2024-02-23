@@ -5,7 +5,7 @@ class Solution {
         int length = nums.length;
         int ans = 0;
 
-        for(int i = 0; i < length; i++) {
+        for(int i = 0; i < length; i++) { // Ignore number is 0
             if(nums[i] == 1) {
                 if(i == 0 || nums[i-1] == 0) { // if element is starting one or number 1 just after 0, point it as start.
                     start = i;
