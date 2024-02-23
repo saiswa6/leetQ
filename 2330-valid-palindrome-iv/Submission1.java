@@ -1,5 +1,7 @@
 //1ms Solution from submission
 
+//For this problem, since we are not deleting anything, we just have to count the occurrences of mismatches and determine if it is less than 3.
+
 class Solution {
     public boolean makePalindrome(String s) {
         if(s.length() <= 3) return true;
