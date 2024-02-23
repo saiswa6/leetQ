@@ -8,15 +8,12 @@ class Solution {
             if(s.charAt(start) != s.charAt(end)) {
                 if(count <= 0) {
                     return false;
-                } else {
-                    start++;
-                    end--;
-                }
+                } 
                 count--;
-            } else {
-                start++;
-                end--;
-            }
+            } 
+
+            start++;
+            end--;
         }
         return true;
     }
