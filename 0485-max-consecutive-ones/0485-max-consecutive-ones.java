@@ -6,9 +6,7 @@ class Solution {
         int ans = 0;
 
         for(int i = 0; i < length; i++) {
-            if(nums[i] == 0) {
-                continue;
-            } else {
+            if(nums[i] == 1) {
                 if(i == 0 || nums[i-1] == 0) {
                     start = i;
                 }
