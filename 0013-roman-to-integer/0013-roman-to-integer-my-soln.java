@@ -7,7 +7,7 @@ Approach :
 
 class Solution {
     public int romanToInt(String s) {
-        Map<String, Integer> map = new HashMap<>();
+        Map<String, Integer> map = new HashMap<>(); // Here, problem is each time map is declared and stores values for each func call. So, move this to class level so that it is not repetative.
         map.put("I" , 1);
         map.put("V" , 5);
         map.put("X" , 10);
