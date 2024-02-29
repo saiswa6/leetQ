@@ -3,6 +3,9 @@ Can we assume the input is valid?
 Yes. Here on Leetcode, you can make that assumption because you haven't been told what to do if it isn't.
 In a real interview, this is a question you should ask the interviewer. Don't ever assume without asking in a real interview that the input has to be valid.
 
+Is there only one valid representation for each number?
+- Given that the representation for 3 is III, it could seem natural that the representation for 15 is VVV, because that would be 5 + 5 + 5. However, it's actually XV, which is 10 + 5. How are you even supposed to know which is correct?
+
 - The trick is to use the "biggest" symbols you can. Because X is bigger than V, we should use an X first and then make up the remainder with a single V, giving XV.
 
 What is CXVII as an integer?
@@ -42,11 +45,11 @@ return total
 Complexity Analysis :
 Let n be the length of the input string (the total number of symbols in it)
 Time complexity : O(1)
-As there is a finite set of roman numerals, the maximum number possible number can be 3999, which in roman numerals is MMMCMXCIX. As such the time complexity is O(1)O(1)O(1).
-If roman numerals had an arbitrary number of symbols, then the time complexity would be proportional to the length of the input, i.e. O(n)O(n)O(n). This is assuming that looking up the value of each symbol is O(1)O(1)O(1).
+As there is a finite set of roman numerals, the maximum number possible number can be 3999, which in roman numerals is MMMCMXCIX. As such the time complexity is O(1).
+If roman numerals had an arbitrary number of symbols, then the time complexity would be proportional to the length of the input, i.e. O(n). This is assuming that looking up the value of each symbol is O(1)
 
 Space complexity : O(1)
-Because only a constant number of single-value variables are used, the space complexity is O(1)O(1)O(1).
+Because only a constant number of single-value variables are used, the space complexity is O(1).
 */
 
 class Solution {
