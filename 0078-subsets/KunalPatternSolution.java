@@ -1,6 +1,6 @@
-class Solution {
-    
+// Backtrack
 
+class Solution {
     public List<List<Integer>> subsets(int[] nums) {
         List<List<Integer>> output = new ArrayList<>();
         backtrack(new ArrayList<Integer>(), nums, 0, output);
@@ -14,11 +14,10 @@ class Solution {
         }
         int number = nums[index];
 
-        
         backtrack(processed, nums, index + 1, output);
         processed.add(number);
         backtrack(processed, nums, index + 1, output);
-        processed.remove(processed.size() - 1);
+        processed.remove(processed.size() - 1); // backtrack
         return;
     }
 }
