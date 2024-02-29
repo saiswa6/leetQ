@@ -1,22 +1,24 @@
 class Solution {
-    List<List<Integer>> output = new ArrayList<>();
-    int n;
-
-    public void backtrack(int start, ArrayList<Integer> curr, int [] nums)
-    {
-        output.add(new ArrayList<>(curr));
-
-        for(int i = start; i < n; i++)
-        {
-            curr.add(nums[i]);
-            backtrack(i + 1, curr, nums);
-            curr.remove(curr.size() - 1);
-        }
-    }
+    
 
     public List<List<Integer>> subsets(int[] nums) {
-        n = nums.length;
-        backtrack(0, new ArrayList<Integer>(), nums);
+        List<List<Integer>> output = new ArrayList<>();
+        backtrack(new ArrayList<Integer>(), nums, 0, output);
         return output;
+    }
+
+    void backtrack(List<Integer> processed, int nums[] , int index, List<List<Integer>> output) {
+        if (index == nums.length) {
+            output.add(new ArrayList<Integer>(processed));
+            return;
+        }
+        int number = nums[index];
+
+        
+        backtrack(processed, nums, index + 1, output);
+        processed.add(number);
+        backtrack(processed, nums, index + 1, output);
+        processed.remove(processed.size() - 1);
+        return;
     }
 }
