@@ -1,4 +1,4 @@
-Approach 3: Lexicographic (Binary Sorted) Subsets
+/*Approach 3: Lexicographic (Binary Sorted) Subsets
 
 Intuition
 The idea is that we map each subset to a bitmask of length n, where 1 on the ith position in bitmask means the presence of nums[i] in the subset, and 0 means its absence.
@@ -11,6 +11,8 @@ Algorithm
 2. Map a subset to each bitmask:
     1 on the ith position in bitmask means the presence of nums[i] in the subset, and 0 means its absence.
 3. Return output list.
+
+*/
 
  public class Solution {
     public List<List<Integer>> subsets(int[] nums) {
@@ -91,7 +93,7 @@ class Solution {
 
 EASY SOLUTION USING LIBRARY FUNCTION
 ====================================
-For approach 3, you don't need a fancy trick to create left zero padding. Also it adds additional substring() operation which is unnecessary. You can just calculate the offset based on the binary string generated. For an even better, just do some bit manipulation on the number instead of converting it to a binary string.
+//For approach 3, you don't need a fancy trick to create left zero padding. Also it adds additional substring() operation which is unnecessary. You can just calculate the offset based on the binary string generated. For an even better, just do some bit manipulation on the number instead of converting it to a binary string.
 
     public List<List<Integer>> subsets(int[] nums) {
         List<List<Integer>> output = new ArrayList<>();
