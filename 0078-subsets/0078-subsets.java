@@ -10,8 +10,11 @@ class Solution {
         outputList.add(new ArrayList<>(processedList));
         
         for(int k = index; k < nums.length; k++) {
+            // add k to the current combination
             processedList.add(nums[k]);
+            // use next integers to complete the combination
             backtrack(processedList, nums, k + 1, outputList);
+            // backtrack
             processedList.remove(processedList.size() - 1);
         }
     }
