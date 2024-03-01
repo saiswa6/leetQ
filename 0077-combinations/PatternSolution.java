@@ -11,7 +11,7 @@ class Solution {
             return;
         }
 
-        for(int i = start; i <= n-k+1; i++) {
+        for(int i = start; i <= n; i++) { // n-k+1 is used instaed n , T. C ms reduces but check why ?
             processed.add(i);
             combosoln(n, k - 1, i + 1, processed, answer);
             processed.remove(processed.size() - 1);
