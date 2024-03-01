@@ -8,7 +8,7 @@ class Solution {
     }
 
     void combo(int[] candidates, int target,List<List<Integer>> answer, int sum , List<Integer> processed, int index, int digits) {
-        if(sum > target){
+        if(sum > target || processed.size() > digits){
             return;
         } else if(sum == target & processed.size() == digits) {
             answer.add(new ArrayList<>(processed));
