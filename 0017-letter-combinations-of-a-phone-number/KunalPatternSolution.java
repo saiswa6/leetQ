@@ -19,7 +19,8 @@ class Solution {
         Character ch = digits.charAt(0);
         String keys = keyPadMap.get(ch);
         for(int i = 0; i < keys.length(); i++){
-            produceCombo(processed+keys.charAt(i), digits.substring(1), answer);
+            produceCombo(processed+keys.charAt(i), digits.substring(1), answer); // Here String is immutable object, After +, it creates a mew object
+            //Here, that's why even though we don't do backtrack. processed is there as it is.
         }
     }
 }
