@@ -1,7 +1,7 @@
 class Solution {
     public List<List<Integer>> combinationSum(int[] candidates, int target) {
         List<List<Integer>> answer = new ArrayList<>();
-        Arrays.sort(nums);
+        //Arrays.sort(nums); --> No need of sorting
         combo(candidates, target, answer,0, new ArrayList<Integer>(), 0);
         return answer;
     }
