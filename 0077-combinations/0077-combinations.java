@@ -6,14 +6,14 @@ class Solution {
     }
 
     void combosoln(int n, int k, int start, List<Integer> processed, List<List<Integer>> answer){
-        if(processed.size() == k) {
+        if(k == 0) {
             answer.add(new ArrayList<>(processed));
             return;
         }
 
         for(int i = start; i <= n; i++) {
             processed.add(i);
-            combosoln(n, k, i + 1, processed, answer);
+            combosoln(n, k - 1, i + 1, processed, answer);
             processed.remove(processed.size() - 1);
         }
     }
