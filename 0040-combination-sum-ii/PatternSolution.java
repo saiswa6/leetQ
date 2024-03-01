@@ -14,12 +14,12 @@ class Solution {
             return;
         } else {
             for(int i = index; i < candidates.length; i++) {
-                if(i > index && candidates[i] == candidates[i-1]) {
+                if(i > index && candidates[i] == candidates[i-1]) {  //1st diff from comb sum1
                     continue;
                 }
                 sum = sum + candidates[i];
                 processed.add(candidates[i]);
-                combo(candidates, target, answer, sum, processed,i + 1);
+                combo(candidates, target, answer, sum, processed,i + 1); //2nd diff from comb sum1
                 sum = sum - candidates[i];
                 processed.remove(processed.size() - 1);
             }
