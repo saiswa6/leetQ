@@ -4,6 +4,13 @@ Approach 2: BFS: One Queue + Sentinel
 - Another approach is to push all the nodes in one queue and to use a sentinel node to separate the levels. Typically, one could use null as a sentinel.
 - The first step is to initiate the first level: root + null as a sentinel. Once it's done, continue to pop the nodes one by one from the left and push their children to the right. Stop each time the current node is null because it means we hit the end of the current level. Each stop is a time to update a right-side view list and to push null in the queue to mark the end of the next level.
 
+//In computer programming, a sentinel node is a specifically designated node used with linked lists and trees as a traversal path terminator. This type of node does not hold or reference any data managed by the data structure.
+//Sentinels are used as an alternative over using NULL as the path terminator in order to get one or more of the following benefits:
+   - Marginally increased speed of operations
+   - Increased data structure robustness (arguably)
+Drawbacks
+   - Marginally increased algorithmic complexity and code size.
+
 Algorithm
 - Initiate the list of the right side view rightside.
 - Initiate the queue by adding a root. Add null sentinel to mark the end of the first level.
