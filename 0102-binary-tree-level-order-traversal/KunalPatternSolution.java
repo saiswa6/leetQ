@@ -42,7 +42,7 @@ class Solution {
                 }
             }
 
-            result.add(currentLevel);
+            result.add(currentLevel); // Here, new ArrayList<>(currentLevel) is not needed. check why ?
         }
 
         return result;
