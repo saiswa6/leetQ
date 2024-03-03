@@ -13,6 +13,8 @@
  * }
  * }
  */
+
+//cLASSIC BFS with IF checl for last element of each level
 class Solution {
     public List<Integer> rightSideView(TreeNode root) {
         List<Integer> result = new ArrayList<>();
@@ -30,7 +32,7 @@ class Solution {
             for (int i = 0; i < levelSize; i++) {
                 TreeNode currentNode = queue.remove();
 
-                if (i == levelSize - 1) {
+                if (i == levelSize - 1) { // --------THIS IS VERY IMPORTANT
                     result.add(currentNode.val);
                 }
 
