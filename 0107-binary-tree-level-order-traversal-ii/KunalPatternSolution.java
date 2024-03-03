@@ -13,6 +13,9 @@
  *     }
  * }
  */
+// Just a classic BFS, where we utilize a linked/Array list to be able to add elements in the beginning fast.
+
+
 class Solution {
     public List<List<Integer>> levelOrderBottom(TreeNode root) {
         List<List<Integer>> result = new ArrayList<>();
@@ -42,7 +45,7 @@ class Solution {
                 }
             }
 
-            result.add(0, currentLevel); // Here, new ArrayList<>(currentLevel) is not needed. check why ?
+            result.add(0, currentLevel); // Here, add the list at index 0 each time. ONLY DIFF
         }
 
         return result;
