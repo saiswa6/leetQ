@@ -13,6 +13,8 @@
  * }
  * }
  */
+
+//Use Level order and just add and avg
 class Solution {
     public List<Double> averageOfLevels(TreeNode root) {
         List<Double> result = new ArrayList<>();
