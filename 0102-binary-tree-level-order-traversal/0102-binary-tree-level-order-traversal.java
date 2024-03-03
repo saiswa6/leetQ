@@ -42,7 +42,7 @@ class Solution {
                 }
             }
 
-            result.add(new ArrayList<>(currentLevel));
+            result.add(currentLevel);
         }
 
         return result;
