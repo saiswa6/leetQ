@@ -25,3 +25,19 @@ class Solution {
         getDepthAndParent(root.right, x, y, depth + 1, root);
     }
 }
+
+
+/*
+I would put getDepthAndParent inside an else. Then if x or y is found, you don't need to go deeper in the tree.
+
+if(root.val == x){
+    xParent = parent;
+    xDepth = depth;
+} else if(root.val == y){
+    yParent = parent;
+    yDepth = depth;
+} else {       
+    getDepthAndParent(root.left, x, y, depth + 1, root);
+    getDepthAndParent(root.right, x, y, depth + 1, root);
+}
+*/
