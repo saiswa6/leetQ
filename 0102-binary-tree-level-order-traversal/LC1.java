@@ -44,3 +44,38 @@ class Solution {
         return levels;
     }
 }
+
+/*
+Complexity Analysis
+Time complexity: O(N) since each node is processed exactly once.
+Space complexity: O(N) to keep the output structure which contains N node values.
+*/
+
+//Imp 
+//To be more specific than stating it uses DFS, I would like to say that it implements pre-order traversal to realize level-order traversal. Each time we add root.val into the list, and then look at left and right child.
+
+
+// Similar Disc Solution
+class Solution {
+    public List<List<Integer>> levelOrder(TreeNode root) 
+    {
+        List<List<Integer>>al=new ArrayList<>();
+        pre(root,0,al);
+        return al;
+    }
+    public static void pre(TreeNode root,int l,List<List<Integer>>al)
+    {
+        if(root==null)
+            return;
+        if(al.size()==l)
+        {
+            List<Integer>li=new ArrayList<>();
+            li.add(root.val);
+            al.add(li);
+        }
+        else
+            al.get(l).add(root.val);
+        pre(root.left,l+1,al);
+        pre(root.right,l+1,al);
+    } 
+}
