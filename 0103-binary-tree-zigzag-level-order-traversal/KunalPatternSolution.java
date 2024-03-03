@@ -13,6 +13,14 @@
  *     }
  * }
  */
+//Use Deque to add First. Last and remove First and Last
+//If Normal Order -> Remove from Front, Add to Back
+//If Reverse Order - Remove from Last, Add to Front
+// Use some flag to make sure about order
+//1
+//3,2
+//4,5,6,7
+
 class Solution {
     public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
         List<List<Integer>> result = new ArrayList<>();
