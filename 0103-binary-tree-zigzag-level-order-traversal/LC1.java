@@ -105,37 +105,27 @@ class Solution {
  */
 class Solution {
     public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
-        List<List<Integer>> result = new ArrayList<>();
-        if(root==null) return result;
+        List<List<Integer>> rtn = new ArrayList<>();
+        if (root == null) return rtn;
         
-        Queue<TreeNode> q = new LinkedList<>();
-        q.add(root);
-        int level=0;
-        
-        while(!q.isEmpty()){
-            List<Integer> ls = new ArrayList<>();
-            int n = q.size();
-            
-            int i=0;
-            while(i<n){
-                TreeNode peek= q.remove();
-                if(peek==null) break;
-                ls.add(peek.val);
-                
-                i++;
-                
-                if(peek.left!=null) q.add(peek.left);
-                if(peek.right!=null) q.add(peek.right);
+        Deque<TreeNode> queue = new ArrayDeque<>();
+        queue.offer(root);
+        boolean reverse = false;
+        while(!queue.isEmpty()) {
+            List<Integer> list = new ArrayList<>();
+            for(int i = queue.size() - 1 ; i >= 0; i--) {
+                TreeNode node = queue.poll();
+                list.add(node.val);
+                if(node.left != null) queue.offer(node.left);
+                if(node.right != null) queue.offer(node.right);
             }
-            if(level%2!=0) Collections.reverse(ls);
-            if(ls.size()>0)
-                result.add(ls);
-            level++;
+            if(reverse) Collections.reverse(list); 
+            rtn.add(list);
+            reverse = !reverse;
         }
-        return result;
+        return rtn;
     }
 }
-
 
 /*
 Complexity Analysis
