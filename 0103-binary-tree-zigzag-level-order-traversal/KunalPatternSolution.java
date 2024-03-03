@@ -69,3 +69,6 @@ class Solution {
         return result;
     }
 }
+
+// T.C : O(N)
+// S.C: O(H) or O(N) in case of skewed BT
