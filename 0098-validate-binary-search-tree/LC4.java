@@ -31,3 +31,19 @@ Complexity Analysis
 Time complexity: O(N) in the worst case when the tree is BST or the "bad" element is the rightmost leaf.
 Space complexity: O(N) to keep stack.
   */
+
+//https://leetcode.com/problems/kth-smallest-element-in-a-bst/description/
+// can be solved by above approach
+ public int kthSmallest(TreeNode root, int k) {
+     Stack<TreeNode> stack = new Stack<>();
+     while(root != null || !stack.isEmpty()) {
+         while(root != null) {
+             stack.push(root);    
+             root = root.left;   
+         } 
+         root = stack.pop();
+         if(--k == 0) break;
+         root = root.right;
+     }
+     return root.val;
+ }
