@@ -23,7 +23,7 @@ class Solution {
             TreeNode left = queue.remove();
             TreeNode right = queue.remove();
 
-            if (left == null && right == null) {
+            if (left == null && right == null) { // This is Important
                 continue;
             }
             
