@@ -13,6 +13,9 @@
  * }
  * }
  */
+
+// This soltion does not seems to be good. Because of int dia = leftHeight + rightHeight + 1. Ideally, leftHeight + rightHeight is correct because it is a diameter.
+// Follow LC Solution
 class Solution {
     private int diameter = 0;
 
