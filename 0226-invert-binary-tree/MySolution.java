@@ -13,22 +13,24 @@
  * }
  * }
  */
+
+//Use Preorder Traversal
 class Solution {
     public TreeNode invertTree(TreeNode root) {
         invert(root);
-        return root;
+        return root; // Always root is returned
     }
 
     public void invert(TreeNode node) {
         if (node == null) {
             return;
         }
-        TreeNode temp = node.left;
+        TreeNode temp = node.left; // swap left, right
         node.left = node.right;
         node.right = temp;
 
-        invert(node.left);
-        invert(node.right);
+        invert(node.left); // traverse left
+        invert(node.right); // traverse right
 
     }
 }
