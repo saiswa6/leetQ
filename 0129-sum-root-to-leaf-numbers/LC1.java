@@ -51,3 +51,26 @@ Complexity Analysis
 Time complexity: O(N) since one has to visit each node.
 Space complexity: up to O(H) to keep the stack, where HHH is a tree height.
 */
+
+
+// Similar
+def sumNumbers(self, root: TreeNode) -> int:
+        if root is None:
+            return 0
+        q = deque()
+        
+        q.append((root, root.val))
+        total = 0
+        while q:
+            
+            node, path_sum = q.popleft()
+            print(path_sum)
+            if node.left is None and node.right is None:
+                total += path_sum
+                
+            if node.left is not None:
+                q.append((node.left, path_sum*10+node.left.val))
+            if node.right is not None:
+                q.append((node.right, path_sum*10+node.right.val))
+                    
+        return total
