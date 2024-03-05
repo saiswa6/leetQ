@@ -6,6 +6,10 @@ Optimal Strategy to Solve the Problem
 - Iterative and recursive approaches here do the job in one pass, but they both need up to O(H) space to keep the stack, where HHH is a tree height.
 - Morris's approach is a two-pass approach, but it's a constant-space one.
 
+Iterative: best time.
+Morris: constant space.
+Recursive: simple to write.
+
 -----------------------
 Approach 1: Iterative Preorder Traversal.
 Intuition
