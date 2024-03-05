@@ -25,3 +25,4 @@ public TreeNode helper(int preStart, int inStart, int inEnd, int[] preorder, int
     root.right = helper(preStart + inIndex - inStart + 1, inIndex + 1, inEnd, preorder, inorder);
     return root;
 }
+// check discuss for good solutions
