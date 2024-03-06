@@ -2,12 +2,15 @@
 Approach 4: Using 2 pointers
 Intuition
 Let's assume left,right,leftMax,rightMax are in positions shown in the graph below.
-we can seeheight[left] < height[right],then for pointerleft, he knows a taller bar exists on his right side, then if leftMax is taller than him, he can contain some water for sure(in our case). So we go ans += (left_max - height[left]) . But if leftMax is shorter than him, then there isn't a left side bar can help him contain water, then he will become other bars' leftMax. so execute (left_max = height[left]).
+we can see height[left] < height[right], then for pointerleft, he knows a taller bar exists on his right side, then if leftMax is taller than him, he can contain some water for sure(in our case). So we go ans += (left_max - height[left]) . But if leftMax is shorter than him, then there isn't a left side bar can help him contain water, then he will become other bars' leftMax. so execute (left_max = height[left]).
 Same idea for right part.
 add some comments to the code above.
 
-Complexity analysis
+// ans += min(left_max[i], right_max[i]) - height[i];
+// but in below code, only  (left_max - height[left]) or (right_max - height[right]) because we are sure of above fact.
+// height[left] >= left_max ? (left_max = height[left]) --> This means as it gretae tah existing leftMax, it will not store water.
 
+Complexity analysis
 Time complexity: O(n). Single iteration of O(n).
 Space complexity: O(1) extra space. Only constant space required for left, right, left_max and right_max.
 */
