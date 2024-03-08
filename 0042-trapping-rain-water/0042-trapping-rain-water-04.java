@@ -8,7 +8,7 @@ add some comments to the code above.
 
 // ans += min(left_max[i], right_max[i]) - height[i];
 // but in below code, only  (left_max - height[left]) or (right_max - height[right]) because we are sure of above fact.
-// height[left] >= left_max ? (left_max = height[left]) --> This means as it gretae tah existing leftMax, it will not store water.
+// height[left] >= left_max ? (left_max = height[left]) --> This means as it greater than existing leftMax, it will not store water.
 
 Complexity analysis
 Time complexity: O(n). Single iteration of O(n).
