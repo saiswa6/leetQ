@@ -1,5 +1,6 @@
 
 //My Solution
+// This is good solution. Complete each sub group of same elements once and go to next subgroup.
 class Solution {
     public int removeDuplicates(int[] nums) {
 
