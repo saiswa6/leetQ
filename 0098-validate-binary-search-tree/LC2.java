@@ -40,6 +40,6 @@ class Solution {
 /*
 Complexity Analysis
 
-Time complexity: O(N)\mathcal{O}(N)O(N) since we visit each node exactly once.
-Space complexity: O(N)\mathcal{O}(N)O(N) since we keep up to the entire tree.
+Time complexity: O(N) since we visit each node exactly once.
+Space complexity: O(N) since we keep up to the entire tree.
   */
