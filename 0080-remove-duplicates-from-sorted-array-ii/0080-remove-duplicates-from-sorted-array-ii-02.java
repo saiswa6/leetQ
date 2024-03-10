@@ -66,6 +66,7 @@ class Solution {
 //////////////////////////////////////////////////////////
 
 //MY SOLUTION
+//My solution is okay but little bit clumsy when comparing writer pointer for the first time. For that, we need to take last value. To avoid confusion, follow by lc solution which comparing i & i - 1 index.
 class Solution {
     public int removeDuplicates(int[] nums) {
         if(nums.length == 0)
