@@ -1,5 +1,6 @@
 
-//Ideally,3rd Method O(n) time O(1) spaceclass Solution {
+//Ideally,3rd Method O(n) time O(1) space
+class Solution {
     public void reverseString(char[] s) {
         int sLength = s.length;
 
