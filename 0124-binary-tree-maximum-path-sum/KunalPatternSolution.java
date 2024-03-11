@@ -30,8 +30,10 @@ class Solution {
         int right = helper(node.right);
         right = Math.max(0, right);
 
+        // Take max of current node and left and right
         ans = Math.max(ans, left + right + node.val);
 
+        // return max of left or right + node.val for further tree
         return Math.max(left, right) + node.val;
     }
 }
