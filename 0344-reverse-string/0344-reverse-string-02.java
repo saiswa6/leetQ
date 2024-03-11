@@ -1,3 +1,4 @@
+//Ideally,2nd Method O(n) time O(n) space
 2. Recursive Call
 
 Explanation is same as Two Pointer's what only different happening is, we are solve this using our fucntion call every time. We are just doing the work to reverse only 1 time first & last element, rest one we are not worrying about!! Because recursion will do that for us :)
@@ -19,7 +20,7 @@ class Solution {
     }
 }
 
-
+//Ideally,1st Method O(n) time O(n) space 
 3. Stack
 
 class Solution {
