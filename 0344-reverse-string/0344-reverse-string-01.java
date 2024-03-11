@@ -1,4 +1,5 @@
-class Solution {
+
+//Ideally,3rd Method O(n) time O(1) spaceclass Solution {
     public void reverseString(char[] s) {
         int sLength = s.length;
 
