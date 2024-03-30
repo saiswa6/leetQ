@@ -10,7 +10,7 @@ class FooBar {
     public synchronized void foo(Runnable printFoo) throws InterruptedException {
 
         for (int i = 0; i < n; i++) {
-            if (!isFoo) {
+            while (!isFoo) {
                 wait();
             }
             // printFoo.run() outputs "foo". Do not change or remove this line.
@@ -23,7 +23,7 @@ class FooBar {
     public synchronized void bar(Runnable printBar) throws InterruptedException {
 
         for (int i = 0; i < n; i++) {
-            if (isFoo) {
+            while (isFoo) {
                 wait();
             }
 
