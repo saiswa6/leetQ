@@ -1,0 +1,65 @@
+//The argument to the Semaphore instance is the number of "permits" that are available. It can be any integer, not just 0 or 1.
+//For runb all acquire() calls will block and tryAcquire() calls will return false, until you do a release().
+//For runf the first acquire() calls will succeed and the rest will block until the first one releases.
+
+import java.util.concurrent.*;
+class FooBar {
+    private int n;
+    Semaphore runf, runb;
+    
+    public FooBar(int n) {
+        this.n = n;
+        runf = new Semaphore(1);
+        runb = new Semaphore(0);
+    }
+
+    public void foo(Runnable printFoo) throws InterruptedException {
+        
+        for (int i = 0; i < n; i++) {
+        	runf.acquire();
+            printFoo.run();
+            runb.release();
+        }
+    }
+
+    public void bar(Runnable printBar) throws InterruptedException {
+        
+        for (int i = 0; i < n; i++) {
+            runb.acquire();
+        	printBar.run();
+            runf.release();
+        }
+    }
+}
+
+/*
+runf is initialised to 1, so there is one permit available.
+- Call to runf.acquire() will allow the calling thread to proceed since there's 1 permit available;
+  acquiring the permit will decrement available permits by 1 (to zero).
+- "foo" is printed.
+- runb.release() called which increments number of runb permits by 1.
+
+runb is initially 0, so there are no permits available.
+- A call to runb.acquire() will block the calling thread from proceeding since there are initially 0 permits;
+once runb.release() is called, there will be a permit available and then "bar" can be printed.
+*/
+
+
+/*
+Initializing foo's semaphore to 1 whereas bar's semaphore to 0 ensures foo is executed first. Only when it finishes executing will it release on bar's semaphore, allowing bar to execute.
+So Foo, Bar interleaves, with each one depending on the other one's release of its semaphore to continue
+The main thing is acquire decreases the value of the semaphore while release increases it.
+*/
+
+
+
+////////////////////////
+/*
+class FooBar {
+        private int n;
+
+        volatile boolean callFoo;
+        volatile boolean callBar;
+
+        This solution never accesses the boolean variables outside of the constructor or a synchronized block, so the volatile keyword isn't needed.
+*/

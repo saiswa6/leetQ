@@ -1,0 +1,197 @@
+/*
+4 Java threading solutions (Synchronized,Lock,Volatile,CAS)
+
+Overall,solution 2(lock+condition) performs better:
+
+comparing to solution 1,solution 2 using more waiting queues to avoid unnecessary notify, reduce lock competition.
+comparing to solution 3 and solution 4,solution 2 using synchronization queue to avoid unnecessary cpu execution.
+*/
+// 1.Synchronized(monitor exit happens-before monitor enter)
+
+public class FooBarSynchronized {
+
+
+    private int n;
+    //flag 0->foo to be print  1->foo has been printed
+    private int flag = 0;
+
+
+    public FooBarSynchronized(int n) {
+        this.n = n;
+    }
+
+    public void foo(Runnable printFoo) throws InterruptedException {
+
+        for (int i = 0; i < n; i++) {
+            synchronized (this) {
+                while (flag == 1) {
+                    this.wait();
+                }
+                // printFoo.run() outputs "foo". Do not change or remove this line.
+                printFoo.run();
+                flag = 1;
+                this.notifyAll();
+            }
+        }
+    }
+
+    public void bar(Runnable printBar) throws InterruptedException {
+
+        for (int i = 0; i < n; i++) {
+            synchronized (this) {
+                while (flag == 0) {
+                    this.wait();
+                }
+                // printBar.run() outputs "bar". Do not change or remove this line.
+                printBar.run();
+                flag = 0;
+                this.notifyAll();
+            }
+        }
+    }
+}
+
+// 2.Lock(volatile write happens-before volatile read)
+
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.ReentrantLock;
+
+class FooBar {
+
+    private int n;
+    //flag 0->foo to be print  1->foo has been printed
+    private int flag=0;
+    ReentrantLock reentrantLock= new ReentrantLock();
+    Condition fooPrintedCondition=reentrantLock.newCondition();
+    Condition barPrintedCondition=reentrantLock.newCondition();
+
+    public FooBar(int n) {
+        this.n = n;
+    }
+
+    public void foo(Runnable printFoo) throws InterruptedException {
+        
+        for (int i = 0; i < n; i++) {
+            try {
+                reentrantLock.lock();
+                while (flag ==1){
+                    barPrintedCondition.await();
+                }
+                // printFoo.run() outputs "foo". Do not change or remove this line.
+                printFoo.run();
+                flag=1;
+                fooPrintedCondition.signalAll();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } finally {
+                reentrantLock.unlock();
+            }
+        }
+    }
+
+    public void bar(Runnable printBar) throws InterruptedException {
+        
+        for (int i = 0; i < n; i++) {
+            reentrantLock.lock();
+            while (flag==0){
+                fooPrintedCondition.await();
+            }
+            // printBar.run() outputs "bar". Do not change or remove this line.
+        	printBar.run();
+            flag=0;
+        	barPrintedCondition.signalAll();
+        	reentrantLock.unlock();
+        }
+    }
+}
+
+//3.Voatile(volatile write happens-before volatile read)  -- Not good solution because of sleep
+//Please be aware that if you ever use Thread.sleep in an interview you've probably failed it. Examples 3 and 4 above would be an automatic failure if it was me. Thread.sleep is almost always a bug.
+
+/**
+ * @autor yeqiaozhu.
+ * @date 2019-08-01
+ */
+public class FooBarVolatile {
+
+    private int n;
+   //flag 0->foo to be print  1->foo has been printed  using volatile
+    private volatile int flag=0;
+
+
+    public FooBarVolatile(int n) {
+        this.n = n;
+    }
+
+    public void foo(Runnable printFoo) throws InterruptedException {
+
+        for (int i = 0; i < n; i++) {
+            while (true){
+                if(flag==0){
+                    printFoo.run();
+                    flag=1;
+                    break;
+                }
+                Thread.sleep(1);
+            }
+        }
+    }
+
+    public void bar(Runnable printBar) throws InterruptedException {
+
+        for (int i = 0; i < n; i++) {
+            while (true){
+                if(flag==1){
+                    printBar.run();
+                    flag=0;
+                    break;
+                }
+                Thread.sleep(1);
+            }
+        }
+    }
+}
+
+//4.CAS(volatile write happens-before volatile read)   -- Not Good Solution because of sleep
+package P1115;
+
+import java.util.concurrent.atomic.AtomicInteger;
+
+/**
+ * @autor yeqiaozhu.
+ * @date 2019-08-01
+ */
+public class FooBarCAS {
+
+
+        private int n;
+        ////flag 0->foo to be print  1->foo has been printed
+        private AtomicInteger flag=new AtomicInteger(0);
+
+
+
+        public FooBarCAS(int n) {
+            this.n = n;
+        }
+
+        public void foo(Runnable printFoo) throws InterruptedException {
+
+            for (int i = 0; i < n; i++) {
+                while (!flag.compareAndSet(0,1)){
+                    Thread.sleep(1);
+                }
+                printFoo.run();
+            }
+        }
+
+        public void bar(Runnable printBar) throws InterruptedException {
+
+            for (int i = 0; i < n; i++) {
+                while (!flag.compareAndSet(1,0)){
+                    Thread.sleep(1);
+                }
+                printBar.run();
+            }
+        }
+
+}
