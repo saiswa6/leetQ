@@ -16,7 +16,7 @@ class FooBar {
             // printFoo.run() outputs "foo". Do not change or remove this line.
             printFoo.run();
             isFoo = false;
-            notify();
+            notifyAll();
         }
     }
 
@@ -30,7 +30,7 @@ class FooBar {
             // printBar.run() outputs "bar". Do not change or remove this line.
             printBar.run();
             isFoo = true;
-            notify();
+            notifyAll();
         }
     }
 }
