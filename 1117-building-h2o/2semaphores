@@ -1,0 +1,33 @@
+//may not be good solution
+
+//In this case, semaphore.acquire(2); would attempt to acquire 2 permits from the semaphore. If there are 2 or more permits available, the method will return immediately, and the calling thread will acquire the permits. Otherwise, the calling thread will block until the required number of permits becomes available.
+
+/*
+Semaphore(int permits, boolean fair)
+permits: The initial number of permits available. This determines the number of threads that can acquire the semaphore without being blocked. In this case, 2 permits are initially available, meaning that up to 2 threads can acquire the semaphore without being blocked.
+
+fair: If true, the semaphore will guarantee a fair ordering among the threads that are waiting to acquire the semaphore. If false, the semaphore does not guarantee any particular order. In this case, true indicates that fair ordering will be used.
+*/
+
+import java.util.concurrent.*;
+class H2O {
+    
+    Semaphore h, o;
+    public H2O() {
+        h = new Semaphore(2, true);
+        o = new Semaphore(0, true);
+    }
+
+    public void hydrogen(Runnable releaseHydrogen) throws InterruptedException {
+		h.acquire();
+        releaseHydrogen.run();
+        o.release();
+        
+    }
+
+    public void oxygen(Runnable releaseOxygen) throws InterruptedException {
+        o.acquire(2);
+		releaseOxygen.run();
+        h.release(2);
+    }
+}
