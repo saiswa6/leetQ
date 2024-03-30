@@ -1,3 +1,6 @@
+// Not an efficient Solution.
+// Only 1 can eat at a time.
+
 class DiningPhilosophers {
 
     public DiningPhilosophers() {
