@@ -1,0 +1,162 @@
+//The principle for the solution is to lock all the fizz and buzz cases with setting the semaphore value to 0, and unlock the first normal number in the initial time by setting the semaphore value to 1. In the following process, the next number will be unlocked using the method releaseLock(k+1), and each kind of threads is waiting for a token to print itself with the method semaphore.acquire(). So once it's feed by the releaseLock(k+1), the thread of the "k+1" will print itself.
+//The next one is defined by the method releaseLock().
+
+//"k+1" stands by"next", it means after the current job is finished, the token would be taken to the next job.
+//It's a way of telling that k has been processed, and k+1 is up next. So releaseLock should free up semaphore required for k+1.
+
+class FizzBuzz {
+    private int n;
+	private Semaphore fizz = new Semaphore(0);
+	private Semaphore buzz = new Semaphore(0);
+	private Semaphore fizzbuzz = new Semaphore(0);
+	private Semaphore num = new Semaphore(1);
+
+	public FizzBuzz(int n) {
+        this.n = n;
+    }
+
+	// printFizz.run() outputs "fizz".
+	public void fizz(Runnable printFizz) throws InterruptedException {
+		for (int k = 1; k <= n; k++) {
+			if (k % 3 == 0 && k % 5 != 0) {
+				fizz.acquire();
+				printFizz.run();
+				releaseLock(k + 1);
+			}
+		}
+	}
+
+	// printBuzz.run() outputs "buzz".
+	public void buzz(Runnable printBuzz) throws InterruptedException {
+		for (int k = 1; k <= n; k++) {
+			if (k % 5 == 0 && k % 3 != 0) {
+				buzz.acquire();
+				printBuzz.run();
+				releaseLock(k + 1);
+			}
+		}
+	}
+
+	// printFizzBuzz.run() outputs "fizzbuzz".
+	public void fizzbuzz(Runnable printFizzBuzz) throws InterruptedException {
+		for (int k = 1; k <= n; k++) {
+			if (k % 15 == 0) {
+				fizzbuzz.acquire();
+				printFizzBuzz.run();
+				releaseLock(k + 1);
+			}
+		}
+	}
+
+	// printNumber.accept(x) outputs "x", where x is an integer.
+	public void number(IntConsumer printNumber) throws InterruptedException {
+		for (int k = 1; k <= n; k++) {
+			if (k % 3 != 0 && k % 5 != 0) {
+				num.acquire();
+				printNumber.accept(k);
+				releaseLock(k + 1);
+			}
+		}
+	}
+
+	public void releaseLock(int n) {
+		if (n % 3 == 0 && n % 5 != 0) {
+			fizz.release();
+		} else if (n % 5 == 0 && n % 3 != 0) {
+			buzz.release();
+		} else if (n % 15 == 0) {
+			fizzbuzz.release();
+		} else {
+			num.release();
+		}
+	}
+}
+
+
+//2nd solution
+// Based on what is the next value of currentNum we release the required semaphore to continue.
+
+// Lastly we need to make sure that the program doesn't goes on bounded wait, for that we need to release all the semaphores if any acquired.
+
+// This is achieved in else part of release() function.
+class FizzBuzz {
+    private int num;
+    private int currentNum;
+    private Semaphore fizzSem;
+    private Semaphore buzzSem;
+    private Semaphore fizzBuzzSem;
+    private Semaphore numberSem;
+
+    public FizzBuzz(int num) {
+        this.num = num;
+        this.currentNum = 1;
+        this.fizzSem = new Semaphore(0);
+        this.buzzSem = new Semaphore(0);
+        this.fizzBuzzSem = new Semaphore(0);
+        this.numberSem = new Semaphore(1);
+    }
+
+    private void release() {
+        currentNum++;
+        if (currentNum <= num) {
+            if (currentNum % 3 == 0 && currentNum % 5 != 0) {
+                fizzSem.release();
+            } else if (currentNum % 3 != 0 && currentNum % 5 == 0) {
+                buzzSem.release();
+            } else if (currentNum % 15 == 0) {
+                fizzBuzzSem.release();
+            } else {
+                numberSem.release();
+            }
+        } else {
+            fizzSem.release();
+            buzzSem.release();
+            fizzBuzzSem.release();
+            numberSem.release();
+        }
+    }
+
+    // printFizz.run() outputs "fizz".
+    public void fizz(Runnable printFizz) throws InterruptedException {
+        while (currentNum <= num) {
+            fizzSem.acquire();
+            if (currentNum <= num) {
+                printFizz.run();
+            }
+            release();
+        }
+    }
+
+    // printBuzz.run() outputs "buzz".
+    public void buzz(Runnable printBuzz) throws InterruptedException {
+        while (currentNum <= num) {
+            buzzSem.acquire();
+            if (currentNum <= num) {
+                printBuzz.run();
+            }
+            release();
+        }
+    }
+
+    // printFizzBuzz.run() outputs "fizzbuzz".
+    public void fizzbuzz(Runnable printFizzBuzz) throws InterruptedException {
+        while (currentNum <= num) {
+            fizzBuzzSem.acquire();
+            if (currentNum <= num) {
+                printFizzBuzz.run();
+            }
+            release();
+        }
+    }
+
+    // printNumber.accept(x) outputs "x", where x is an integer.
+    public void number(IntConsumer printNumber) throws InterruptedException {
+        while (currentNum <= num) {
+            numberSem.acquire();
+            if (currentNum <= num) {
+                printNumber.accept(currentNum);
+            }
+            release();
+        }   
+    }
+}

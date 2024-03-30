@@ -1,0 +1,59 @@
+/*
+In this solution we use a CyclicBarrier to hold each iteration of the while loop until each thread has an opportunity to execute. Once all four threads have executed, the Barrier is tripped, the counter increased, and all threads advance to the next iteration.
+
+*/
+class FizzBuzz {
+    private int n;
+    private CyclicBarrier cyclicBarrier;
+    private int i;
+
+    public FizzBuzz(int n) {
+        this.n = n;
+        cyclicBarrier = new CyclicBarrier(4, () -> i++); //Barrier tripped when all four threads call await(), which increases the counter
+        i = 1;
+    }
+
+    public void fizz(Runnable printFizz) throws InterruptedException {
+        while(i <= n){
+            if(i % 3 == 0 && i % 5 != 0)
+                printFizz.run();
+            
+            try{
+                cyclicBarrier.await();
+            }catch(BrokenBarrierException e){}
+        }
+    }
+
+    public void buzz(Runnable printBuzz) throws InterruptedException {
+        while(i <= n){
+            if(i % 3 != 0 && i % 5 == 0)
+                printBuzz.run();
+            
+            try{
+                cyclicBarrier.await();
+            }catch(BrokenBarrierException e){}
+        }
+    }
+
+    public void fizzbuzz(Runnable printFizzBuzz) throws InterruptedException {
+        while(i <= n){
+            if(i % 3 == 0 && i % 5 == 0)
+                printFizzBuzz.run();
+            
+            try{
+                cyclicBarrier.await();
+            }catch(BrokenBarrierException e){}
+        }
+    }
+
+    public void number(IntConsumer printNumber) throws InterruptedException {
+        while(i <= n){
+            if(i % 3 != 0 && i % 5 != 0)
+                printNumber.accept(i);
+            
+            try{
+                cyclicBarrier.await();
+            }catch(BrokenBarrierException e){}
+        }
+    }
+}

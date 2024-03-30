@@ -1,3 +1,5 @@
+// Using synchronized
+
 class FizzBuzz {
     private int n;
     // AtomicInteger number;
