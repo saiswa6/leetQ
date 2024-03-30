@@ -1,0 +1,24 @@
+//staring from java 9, it is suggested to use Thread.onSpinWait(); inside loop body of while loop that spins on field. More info here. In fact I tried it with normal boolean field and even without volatile it works like charm:
+
+//public static void onSpinWait​()
+//Indicates that the caller is momentarily unable to progress, until the occurrence of one or more actions on the part of other activities. By invoking this method within each iteration of a spin-wait loop construct, the calling thread indicates to the runtime that it is busy-waiting. The runtime may take action to improve the performance of invoking spin-wait loop constructions.
+
+class Foo {
+    private boolean firstDone, secondDone;
+
+    public void first(Runnable printFirst) {
+        printFirst.run();
+        firstDone = true;
+    }
+
+    public void second(Runnable printSecond) {
+        while (!firstDone) Thread.onSpinWait();
+        printSecond.run();
+        secondDone = true;
+    }
+
+    public void third(Runnable printThird) {
+        while (!secondDone) Thread.onSpinWait();
+        printThird.run();
+    }
+}
