@@ -1,39 +1,40 @@
 class H2O {
-
-    Semaphore hydrogenSemaphore;
-    Semaphore oxygenSemaphore;
-    private CyclicBarrier barrier;
+    private int hydrogenCount ;
+    private int oxygenCount ;
 
     public H2O() {
-        hydrogenSemaphore = new Semaphore(2);
-        oxygenSemaphore = new Semaphore(1);
-        barrier = new CyclicBarrier(3);
+        hydrogenCount = 0;
+        oxygenCount = 0;
+        
     }
 
-    public void hydrogen(Runnable releaseHydrogen) throws InterruptedException {
-        try {
-            hydrogenSemaphore.acquire();
-            releaseHydrogen.run();
-            barrier.await();
-        } catch (Exception e) {
-
-        } finally {
-            hydrogenSemaphore.release();
+    public synchronized void hydrogen(Runnable releaseHydrogen) throws InterruptedException {
+        if(hydrogenCount == 2 && oxygenCount == 1 ) {
+            hydrogenCount = 0;
+            oxygenCount = 0;
         }
-        // releaseHydrogen.run() outputs "H". Do not change or remove this line
+		if(hydrogenCount < 2) {
+        // releaseHydrogen.run() outputs "H". Do not change or remove this line.
+        releaseHydrogen.run();
+        hydrogenCount++;
+          notifyAll();
+        } else {
+           wait();
+        }
     }
 
-    public void oxygen(Runnable releaseOxygen) throws InterruptedException {
-        try {
-            oxygenSemaphore.acquire();
-            // releaseOxygen.run() outputs "O". Do not change or remove this line.
-            releaseOxygen.run();
-            barrier.await();
-        } catch (Exception e) {
-
-        } finally {
-            oxygenSemaphore.release();
+    public synchronized void oxygen(Runnable releaseOxygen) throws InterruptedException {
+        if(hydrogenCount == 2 && oxygenCount == 1 ) {
+            hydrogenCount = 0;
+            oxygenCount = 0;
         }
-
+        if(oxygenCount < 1) {
+        // releaseOxygen.run() outputs "O". Do not change or remove this line.
+		releaseOxygen.run();
+        oxygenCount++;
+        notifyAll();
+        } else {
+            wait();
+        }
     }
 }
