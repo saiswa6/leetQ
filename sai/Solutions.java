@@ -177,3 +177,35 @@ class Foo {
         }
     }
 }
+//5th Solution
+//rl1 and rl2 are effectively act as ReentrantLock with exception with the only difference that CountDownLatch can be "unlocked" from any thread by using countDown() method.
+//ReentrantLock can't be used because its unlock() throws an exception when unlocking from the non-owner thread.\//CountDownLatch seems a good fit for this, from java doc " A synchronization aid that allows one or more threads to wait until, a set of operations being performed in other threads completes. "
+
+class Foo {
+
+    private CountDownLatch rl1 = new CountDownLatch(1);
+    private CountDownLatch rl2 = new CountDownLatch(1);
+    
+    public Foo() {
+        
+    }
+
+    public void first(Runnable printFirst) throws InterruptedException {
+        // printFirst.run() outputs "first". Do not change or remove this line.
+        printFirst.run();
+        rl1.countDown();
+    }
+
+    public void second(Runnable printSecond) throws InterruptedException {
+        rl1.await();
+        // printSecond.run() outputs "second". Do not change or remove this line.
+        printSecond.run();
+        rl2.countDown();
+    }
+
+    public void third(Runnable printThird) throws InterruptedException {
+        rl2.await();
+        // printThird.run() outputs "third". Do not change or remove this line.
+        printThird.run();
+    }
+}
