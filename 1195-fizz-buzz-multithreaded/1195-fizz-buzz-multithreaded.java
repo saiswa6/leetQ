@@ -14,59 +14,64 @@ class FizzBuzz {
     // printFizz.run() outputs "fizz".
     public void fizz(Runnable printFizz) throws InterruptedException {
 
-
-            while (number <= n) {
-                if (number % 3 == 0 && number % 5 != 0) {
-                    fizz.acquire();
-                    printFizz.run();
-                    number++;
+        while (number <= n) {
+            if (number % 3 == 0 && number % 5 != 0) {
+                fizz.acquire();
+                printFizz.run();
+                number++;
+                if (number <= n) {
                     releaseLock(number);
                 }
             }
+        }
 
     }
 
     // printBuzz.run() outputs "buzz".
     public void buzz(Runnable printBuzz) throws InterruptedException {
 
-
-            while (number <= n) {
-                if (number % 3 != 0 && number % 5 == 0) {
-                    buzz.acquire();
-                    printBuzz.run();
-                    number++;
+        while (number <= n) {
+            if (number % 3 != 0 && number % 5 == 0) {
+                buzz.acquire();
+                printBuzz.run();
+                number++;
+                if (number <= n) {
                     releaseLock(number);
                 }
             }
+        }
 
     }
 
     // printFizzBuzz.run() outputs "fizzbuzz".
     public void fizzbuzz(Runnable printFizzBuzz) throws InterruptedException {
 
-
-            while (number <= n) {
-                if (number % 3 == 0 && number % 5 == 0) {
-                    fizzbuzz.acquire();
-                    printFizzBuzz.run();
-                    number++;
+        while (number <= n) {
+            if (number % 3 == 0 && number % 5 == 0) {
+                fizzbuzz.acquire();
+                printFizzBuzz.run();
+                number++;
+                if (number <= n) {
                     releaseLock(number);
                 }
             }
+        }
 
     }
 
     // printNumber.accept(x) outputs "x", where x is an integer.
     public void number(IntConsumer printNumber) throws InterruptedException {
 
-            while (number <= n) {
-                if (number % 3 != 0 && number % 5 != 0) {
-                    num.acquire();
-                    printNumber.accept(number);
-                    number++;
+        while (number <= n) {
+            if (number % 3 != 0 && number % 5 != 0) {
+                num.acquire();
+                printNumber.accept(number);
+                number++;
+                if (number <= n) {
                     releaseLock(number);
                 }
             }
+        }
 
     }
 
