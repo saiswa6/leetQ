@@ -1,35 +1,32 @@
 class BoundedBlockingQueue {
-
-    Queue<Integer> buffer;
-    // private int sizeOfBuffer;
-    private int capacityOfBuffer;
+    Queue<Integer> boundedQueue;
+    int capacity;
 
     public BoundedBlockingQueue(int capacity) {
-        buffer = new ArrayDeque<>(capacity);
-        // sizeOfBuffer = 0;
-        capacityOfBuffer = capacity;
+        this.capacity = capacity;
+        this.boundedQueue = new ArrayDeque<>(capacity);
+        
     }
-
+    
     public synchronized void enqueue(int element) throws InterruptedException {
-        while (buffer.size() == capacityOfBuffer) {
+        while(boundedQueue.size() == capacity){
             wait();
         }
 
-        buffer.add(element);
+        boundedQueue.offer(element);
         notifyAll();
-
     }
-
+    
     public synchronized int dequeue() throws InterruptedException {
-        while (buffer.size() == 0) {
+        while (boundedQueue.isEmpty()) {
             wait();
         }
-        int value = buffer.poll();
+        int value = boundedQueue.remove();
         notifyAll();
         return value;
     }
-
+    
     public int size() {
-        return buffer.size();
+        return boundedQueue.size();
     }
 }
