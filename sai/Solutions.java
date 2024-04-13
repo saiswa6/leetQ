@@ -355,6 +355,77 @@ class BoundedBlockingQueue {
 }
 
 // Slution 4 : Imp with Semaphore
+/*
+Semaphores: Two instances of the Semaphore class are used, s1 and s2, each serving a distinct purpose. s1 governs the ability to insert an item into the queue, and begins with permits equal to the capacity. s2 reflects the number of items in the queue available to be dequeued and starts with no permits. This is a classic application of the "producer-consumer" problem's solution, where one semaphore is used to signal "empty slots" and another semaphore is used to signal "available items".
+
+When enqueue(element: int) is called, the following steps are performed:
+---------------------------------------------------------------------------
+self.s1.acquire(): Attempt to acquire a permit from s1, which represents a free slot in the queue. If there are no free slots, this call will block until another thread calls dequeue and releases a permit on s1.
+self.q.append(element): Once a permit has been acquired (meaning there is space in the queue), the element is safely enqueued into the queue.
+self.s2.release(): Releasing a permit on s2 to signal that an element has been enqueued and is now available for dequeuing.
+
+For dequeue(), the steps are the mirror image:
+----------------------------------------------
+self.s2.acquire(): This acquires a permit from s2, which signifies that there is at least one element in the queue to be dequeued. If the queue is empty, this call will block until a thread calls enqueue and releases a permit on s2.
+ans = self.q.popleft(): Removes the oldest (front) element from the queue safely because it's been ensured that the queue is not empty.
+self.s1.release(): Releasing a permit on s1 to signal that an element has been dequeued and there is now a free slot in the queue.
+*/
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.concurrent.Semaphore;
+
+// This class represents a thread-safe bounded blocking queue with a fixed capacity.
+public class BoundedBlockingQueue {
+    // Semaphore to control the number of elements that can be added (based on capacity).
+    private final Semaphore enqueueSemaphore;
+    // Semaphore to control the number of elements that can be removed (starts at 0).
+    private final Semaphore dequeueSemaphore;
+    // The queue to store elements.
+    private final Deque<Integer> queue;
+
+    // Constructor initializes the semaphores and queue with specified capacity.
+    public BoundedBlockingQueue(int capacity) {
+        enqueueSemaphore = new Semaphore(capacity);
+        dequeueSemaphore = new Semaphore(0);
+        queue = new ArrayDeque<>();
+    }
+
+    // Enqueues an element into the queue if there's available capacity.
+    public void enqueue(int element) throws InterruptedException {
+        // Acquire a permit from enqueueSemaphore discarding it, if available capacity is 0 waits.
+        enqueueSemaphore.acquire();
+        synchronized (this) {
+            // Adds the element to the end of the queue.
+            queue.offer(element);
+        }
+        // Release a permit to dequeueSemaphore, increasing the number of available elements to dequeue.
+        dequeueSemaphore.release();
+    }
+
+    // Dequeues an element from the front of the queue.
+    public int dequeue() throws InterruptedException {
+        // Acquire a permit from dequeueSemaphore, waiting if necessary until an element is available.
+        dequeueSemaphore.acquire();
+        int element;
+        synchronized (this) {
+            // Remove and return the front element of the queue.
+            element = queue.poll();
+        }
+        // Release a permit to enqueueSemaphore, increasing the available capacity.
+        enqueueSemaphore.release();
+        return element;
+    }
+
+    // Returns the current number of elements in the queue.
+    public int size() {
+        synchronized (this) {
+            // The size of the queue is returned.
+            return queue.size();
+        }
+    }
+}
+
+//Semaphore other variant
 class BoundedBlockingQueue {
     private final int[] queue;
     private volatile int size = 0;
