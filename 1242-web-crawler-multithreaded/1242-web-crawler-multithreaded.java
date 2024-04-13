@@ -6,46 +6,25 @@
  * }
  */
 class Solution {
-    private Set<String> visited = ConcurrentHashMap.newKeySet();
-    private String domain;
+    private Set<String> set;
+    private String host;
     private HtmlParser htmlParser;
-    private ExecutorService executor = Executors.newFixedThreadPool(6);
-    private AtomicInteger activeTasks = new AtomicInteger(0);
 
     public List<String> crawl(String startUrl, HtmlParser htmlParser) {
+        set = ConcurrentHashMap.newKeySet();
+        host = getHost(startUrl);
         this.htmlParser = htmlParser;
-        this.domain = startUrl.split("/")[2];
-        visited.add(startUrl);
-        activeTasks.set(1);
-        executor.execute(new Task(startUrl));
-
-        while (activeTasks.get() > 0) {
-            try {
-                Thread.sleep(80);
-            } catch (InterruptedException ie) {
-                ie.printStackTrace();
-            }
-        }
-        executor.shutdown();
-        return new ArrayList<>(visited);
+        crawlR(startUrl);
+        return new ArrayList<>(set);
     }
 
-    private class Task implements Runnable {
-        private String url;
-
-        public Task(String startUrl) {
-            this.url = startUrl;
-        }
-
-        public void run() {
-            for (String link : htmlParser.getUrls(url)) {
-                if (link.split("/")[2].equals(domain) && visited.add(link)) {
-                    activeTasks.incrementAndGet();
-                    executor.execute(new Task(link));
-                }
-            }
-            activeTasks.decrementAndGet();
-        }
+    private void crawlR(String startUrl) {
+        if (set.contains(startUrl) || !getHost(startUrl).equals(host)) return;
+        set.add(startUrl);
+        htmlParser.getUrls(startUrl).parallelStream().forEach(this::crawlR);
     }
 
+    private static String getHost(String url) {
+        return url.split("/")[2];
+    }
 }
