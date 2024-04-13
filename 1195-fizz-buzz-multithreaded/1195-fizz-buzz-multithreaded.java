@@ -2,112 +2,83 @@
 class FizzBuzz {
     private int n;
     private int number = 1;
-    private ReentrantLock lock;
-    private Condition FizzCondition;
-    private Condition BuzzCondition;
-    private Condition FizzBuzzCondition;
-    private Condition NumberCondition;
+    private Semaphore fizz = new Semaphore(0);
+    private Semaphore buzz = new Semaphore(0);
+    private Semaphore fizzbuzz = new Semaphore(0);
+    private Semaphore num = new Semaphore(1);
 
     public FizzBuzz(int n) {
         this.n = n;
-        lock = new ReentrantLock();
-        FizzBuzzCondition = lock.newCondition();
-        BuzzCondition = lock.newCondition();
-        FizzCondition = lock.newCondition();
-        NumberCondition = lock.newCondition();
-        
     }
 
     // printFizz.run() outputs "fizz".
     public void fizz(Runnable printFizz) throws InterruptedException {
-        try {
-            lock.lock();
+
+
             while (number <= n) {
                 if (number % 3 == 0 && number % 5 != 0) {
+                    fizz.acquire();
                     printFizz.run();
                     number++;
-                    BuzzCondition.signal();
-                    FizzBuzzCondition.signal();
-                    NumberCondition.signal();
-                } else {
-                    FizzCondition.await();
+                    releaseLock(number);
                 }
             }
-        } finally {
-            lock.unlock();
-        }
+
     }
 
     // printBuzz.run() outputs "buzz".
     public void buzz(Runnable printBuzz) throws InterruptedException {
-        try {
-            lock.lock();
+
+
             while (number <= n) {
                 if (number % 3 != 0 && number % 5 == 0) {
+                    buzz.acquire();
                     printBuzz.run();
                     number++;
-                    FizzCondition.signal();
-                    FizzBuzzCondition.signal();
-                    NumberCondition.signal();
-                } else {
-                    BuzzCondition.await();
+                    releaseLock(number);
                 }
             }
-        } finally {
-            lock.unlock();
-        }
+
     }
 
     // printFizzBuzz.run() outputs "fizzbuzz".
     public void fizzbuzz(Runnable printFizzBuzz) throws InterruptedException {
-        try {
-            lock.lock();
+
 
             while (number <= n) {
                 if (number % 3 == 0 && number % 5 == 0) {
+                    fizzbuzz.acquire();
                     printFizzBuzz.run();
                     number++;
-                    FizzCondition.signal();
-                    BuzzCondition.signal();
-                    NumberCondition.signal();
-                } else {
-                    FizzBuzzCondition.await();
+                    releaseLock(number);
                 }
             }
-        } finally {
-            lock.unlock();
-        }
+
     }
 
     // printNumber.accept(x) outputs "x", where x is an integer.
     public void number(IntConsumer printNumber) throws InterruptedException {
-        try {
-            lock.lock();
+
             while (number <= n) {
                 if (number % 3 != 0 && number % 5 != 0) {
+                    num.acquire();
                     printNumber.accept(number);
                     number++;
-                    FizzCondition.signal();
-                    FizzBuzzCondition.signal();
-                    BuzzCondition.signal();
-                } else {
-                    NumberCondition.await();
+                    releaseLock(number);
                 }
             }
-        } finally {
-            lock.unlock();
-        }
+
     }
 
-    /*private Condition nextCondition(int number) {
-        if (number % 3 == 0 && number % 5 == 0) {
-            return FizzBuzzCondition;
-        } else if (number % 3 == 0 && number % 5 != 0) {
-            return FizzCondition;
-        } else if (number % 3 != 0 && number % 5 == 0) {
-            return BuzzCondition;
+    public void releaseLock(int n) {
+        if (n % 3 == 0 && n % 5 != 0) {
+            fizz.release();
+        } else if (n % 5 == 0 && n % 3 != 0) {
+            buzz.release();
+        } else if (n % 15 == 0) {
+            fizzbuzz.release();
         } else {
-            return NumberCondition;
+            num.release();
         }
-    }*/
+    }
 }
