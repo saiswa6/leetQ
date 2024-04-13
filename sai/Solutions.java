@@ -215,13 +215,63 @@ class Foo {
 /*
 1188. Design Bounded Blocking Queue
 Implement a thread-safe bounded blocking queue that has the following methods:
-BoundedBlockingQueue(int capacity) The constructor initializes the queue with a maximum capacity.
-void enqueue(int element) Adds an element to the front of the queue. If the queue is full, the calling thread is blocked until the queue is no longer full.
-int dequeue() Returns the element at the rear of the queue and removes it. If the queue is empty, the calling thread is blocked until the queue is no longer empty.
-int size() Returns the number of elements currently in the queue.
+*BoundedBlockingQueue(int capacity) The constructor initializes the queue with a maximum capacity.
+*void enqueue(int element) Adds an element to the front of the queue. If the queue is full, the calling thread is blocked until the queue is no longer full.
+*int dequeue() Returns the element at the rear of the queue and removes it. If the queue is empty, the calling thread is blocked until the queue is no longer empty.
+*int size() Returns the number of elements currently in the queue.
 */
 
-//Solution 1: Using synchronized
+
+// Solution 1 : Synchronized Block, here Queue is intialized with Array , not ArrayDeque(Very Important)
+class BoundedBlockingQueue {
+
+    private int queue[];
+    private volatile int size; // declare size as volatile as it is accessed by many threads
+    private int capacity;
+    private int readPointer;
+    private int writePointer;
+
+    public BoundedBlockingQueue(int capacity) {
+        this.capacity = capacity;
+        queue = new int[capacity];
+        size = 0;
+        readPointer = 0;
+        writePointer = 0;
+    }
+
+    public void enqueue(int element) throws InterruptedException {
+        synchronized (this) {
+            while (size == capacity) {
+                wait();
+            }
+
+            queue[writePointer++] = element;
+            size++;
+            writePointer = writePointer % capacity;
+            notifyAll();
+        }
+    }
+
+    public int dequeue() throws InterruptedException {
+        synchronized (this) {
+            while (size == 0) {
+                wait();
+            }
+
+            int value = queue[readPointer++];// readPointer is also ++, not -- as it is a Queue.
+            size--;
+            readPointer = readPointer % capacity;
+            notifyAll();
+            return value;
+        }
+    }
+
+    public int size() {
+        return size;
+    }
+}
+
+//Solution 2: Using synchronized
 class BoundedBlockingQueue {
     Queue<Integer> boundedQueue;
     int capacity;
@@ -255,7 +305,7 @@ class BoundedBlockingQueue {
     }
 }
 
-//Solution 2: Reentrant Lock
+//Solution 3: Reentrant Lock
   class BoundedBlockingQueue {
     Queue<Integer> boundedQueue;
     int capacity;
@@ -303,3 +353,50 @@ class BoundedBlockingQueue {
         return boundedQueue.size();
     }
 }
+
+// Slution 4 : Imp with Semaphore
+class BoundedBlockingQueue {
+    private final int[] queue;
+    private volatile int size = 0;
+    private int wp = 0, rp = 0;
+    Semaphore enqSem, deqSem, lockSem;
+    
+    public BoundedBlockingQueue(int capacity) {
+        this.queue = new int[capacity];
+        enqSem = new Semaphore(capacity);
+        deqSem = new Semaphore(0);
+        lockSem = new Semaphore(1);
+    }
+    
+    public void enqueue(int element) throws InterruptedException {
+        enqSem.acquire();
+        lockSem.acquire();
+        
+        queue[wp++] = element;
+        size++;
+        wp %= queue.length;
+        
+        lockSem.release();
+        deqSem.release();
+    }
+    
+    public int dequeue() throws InterruptedException {
+        deqSem.acquire();
+        lockSem.acquire();
+        
+        int res = queue[rp++];
+        size--;
+        rp %= queue.length;
+        
+        lockSem.release();
+        enqSem.release();
+        return res;
+    }
+    
+    public int size() {
+        return size;
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
