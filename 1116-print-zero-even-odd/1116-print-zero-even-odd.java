@@ -1,42 +1,47 @@
 class ZeroEvenOdd {
     private int n;
-    private Integer sequence;
+    // private Semaphore
+    private volatile int status = 0;
 
     public ZeroEvenOdd(int n) {
         this.n = n;
-        sequence = 0;
     }
 
     // printNumber.accept(x) outputs "x", where x is an integer.
     public synchronized void zero(IntConsumer printNumber) throws InterruptedException {
+
         for (int i = 1; i <= n; i++) {
-            while (sequence != 0) {  // need sequence == 0 to unlock.
+            while (status != 0) {      //Put this while block for status inside for loop to maintain context of i = 0, 1, 2, 3,....
                 wait();
             }
             printNumber.accept(0);
-            sequence = i % 2 == 1 ? 1 : 2;
+            status = (i % 2) + 1;
             notifyAll();
         }
-    }
 
-    public synchronized void odd(IntConsumer printNumber) throws InterruptedException {
-        for (int i = 1; i <= n; i += 2) {
-            while (sequence != 1) {  // need sequence == 1 to unlock.
-                wait();
-            }
-            printNumber.accept(i);
-            sequence = 0;
-            notifyAll();
-        }
     }
 
     public synchronized void even(IntConsumer printNumber) throws InterruptedException {
-        for (int i = 2; i <= n; i += 2) {
-            while (sequence != 2) {  // need sequence == 2 to unlock.
+
+        for (int i = 2; i <= n; i = i + 2) {
+            while (status != 1) {
                 wait();
             }
             printNumber.accept(i);
-            sequence = 0;
+            status = 0;
+            notifyAll();
+        }
+
+    }
+
+    public synchronized void odd(IntConsumer printNumber) throws InterruptedException {
+
+        for (int i = 1; i <= n; i = i + 2) {
+            while (status != 2) {
+                wait();
+            }
+            printNumber.accept(i);
+            status = 0;
             notifyAll();
         }
     }
