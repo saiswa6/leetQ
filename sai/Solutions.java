@@ -677,3 +677,83 @@ class ZeroEvenOdd {
 
     }
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+/*Question : 
+1195. Fizz Buzz Multithreaded
+
+You have the four functions:
+- printFizz that prints the word "fizz" to the console,
+- printBuzz that prints the word "buzz" to the console,
+- printFizzBuzz that prints the word "fizzbuzz" to the console, and
+- printNumber that prints a given integer to the console.
+You are given an instance of the class FizzBuzz that has four functions: fizz, buzz, fizzbuzz and number. The same instance of FizzBuzz will be passed to four different threads:
+
+"fizzbuzz" if i is divisible by 3 and 5,
+"fizz" if i is divisible by 3 and not 5,
+"buzz" if i is divisible by 5 and not 3, or
+i if i is not divisible by 3 or 5.
+  */
+// SOlution 1 : Synchronized
+class FizzBuzz {
+    private int n;
+    private int number = 1;
+
+    public FizzBuzz(int n) {
+        this.n = n;
+    }
+
+    // printFizz.run() outputs "fizz".
+    public synchronized void fizz(Runnable printFizz) throws InterruptedException {
+
+        while (number <= n) {   //This condition is very Important. Use while for checking number <= n. inside check for number identiy.
+            if (number % 3 == 0 && number % 5 != 0) {
+                printFizz.run();
+                number++;
+                notifyAll();
+            } else {
+                wait();
+            }
+        }
+    }
+
+    // printBuzz.run() outputs "buzz".
+    public synchronized void buzz(Runnable printBuzz) throws InterruptedException {
+        while (number <= n) {
+            if (number % 3 != 0 && number % 5 == 0) {
+                printBuzz.run();
+                number++;
+                notifyAll();
+            } else {
+                wait();
+            }
+        }
+    }
+
+    // printFizzBuzz.run() outputs "fizzbuzz".
+    public synchronized void fizzbuzz(Runnable printFizzBuzz) throws InterruptedException {
+        while (number <= n) {
+            if (number % 3 == 0 && number % 5 == 0) {
+                printFizzBuzz.run();
+                number++;
+                notifyAll();
+            } else {
+                wait();
+            }
+        }
+    }
+
+    // printNumber.accept(x) outputs "x", where x is an integer.
+    public synchronized void number(IntConsumer printNumber) throws InterruptedException {
+        while (number <= n) {
+            if (number % 3 != 0 && number % 5 != 0) {
+                printNumber.accept(number);
+                number++;
+                notifyAll();
+            } else {
+                wait();
+            }
+        }
+    }
+}
