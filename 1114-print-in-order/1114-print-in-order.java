@@ -28,7 +28,7 @@ class Foo {
     }
 
     public synchronized void third(Runnable printThird) throws InterruptedException {
-        while (!isFirstDone && !isSecondDone) {
+        while (!isFirstDone || !isSecondDone) {
             wait();
         }
         // printThird.run() outputs "third". Do not change or remove this line.
