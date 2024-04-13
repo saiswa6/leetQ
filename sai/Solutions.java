@@ -209,3 +209,48 @@ class Foo {
         printThird.run();
     }
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+/*
+1188. Design Bounded Blocking Queue
+Implement a thread-safe bounded blocking queue that has the following methods:
+BoundedBlockingQueue(int capacity) The constructor initializes the queue with a maximum capacity.
+void enqueue(int element) Adds an element to the front of the queue. If the queue is full, the calling thread is blocked until the queue is no longer full.
+int dequeue() Returns the element at the rear of the queue and removes it. If the queue is empty, the calling thread is blocked until the queue is no longer empty.
+int size() Returns the number of elements currently in the queue.
+*/
+
+//Solution 1: Using synchronized
+class BoundedBlockingQueue {
+    Queue<Integer> boundedQueue;
+    int capacity;
+
+    public BoundedBlockingQueue(int capacity) {
+        this.capacity = capacity;
+        this.boundedQueue = new ArrayDeque<>(capacity);
+        
+    }
+    
+    public synchronized void enqueue(int element) throws InterruptedException {
+        while(boundedQueue.size() == capacity){
+            wait();
+        }
+
+        boundedQueue.offer(element);
+        notifyAll();
+    }
+    
+    public synchronized int dequeue() throws InterruptedException {
+        while (boundedQueue.isEmpty()) {
+            wait();
+        }
+        int value = boundedQueue.remove();
+        notifyAll();
+        return value;
+    }
+    
+    public int size() {
+        return boundedQueue.size();
+    }
+}
