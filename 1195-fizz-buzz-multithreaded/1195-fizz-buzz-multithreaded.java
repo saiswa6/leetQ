@@ -1,36 +1,31 @@
 class FizzBuzz {
     private int n;
-    // AtomicInteger number;
-    private int counter = 1;
+    private int number = 1;
 
     public FizzBuzz(int n) {
         this.n = n;
-        // number = new AtomicInteger(1);
-        counter = 1;
     }
 
     // printFizz.run() outputs "fizz".
     public synchronized void fizz(Runnable printFizz) throws InterruptedException {
-        // int currentNumber = number.get();
-        while (counter <= n) {
-            if (counter % 3 == 0 && counter % 5 != 0) {
+
+        while (number <= n) {
+            if (number % 3 == 0 && number % 5 != 0) {
                 printFizz.run();
-                counter++;
+                number++;
                 notifyAll();
             } else {
                 wait();
             }
         }
-
     }
 
     // printBuzz.run() outputs "buzz".
     public synchronized void buzz(Runnable printBuzz) throws InterruptedException {
-        // int currentNumber = number.get();
-        while (counter <= n) {
-            if (counter % 3 != 0 && counter % 5 == 0) {
+        while (number <= n) {
+            if (number % 3 != 0 && number % 5 == 0) {
                 printBuzz.run();
-                counter++;
+                number++;
                 notifyAll();
             } else {
                 wait();
@@ -40,11 +35,10 @@ class FizzBuzz {
 
     // printFizzBuzz.run() outputs "fizzbuzz".
     public synchronized void fizzbuzz(Runnable printFizzBuzz) throws InterruptedException {
-        // int currentNumber = number.get();
-        while (counter <= n) {
-            if (counter % 3 == 0 && counter % 5 == 0) {
+        while (number <= n) {
+            if (number % 3 == 0 && number % 5 == 0) {
                 printFizzBuzz.run();
-                counter++;
+                number++;
                 notifyAll();
             } else {
                 wait();
@@ -54,11 +48,10 @@ class FizzBuzz {
 
     // printNumber.accept(x) outputs "x", where x is an integer.
     public synchronized void number(IntConsumer printNumber) throws InterruptedException {
-        // int currentNumber = number.get();
-        while (counter <= n) {
-            if (counter % 3 != 0 && counter % 5 != 0) {
-                printNumber.accept(counter);
-                counter++;
+        while (number <= n) {
+            if (number % 3 != 0 && number % 5 != 0) {
+                printNumber.accept(number);
+                number++;
                 notifyAll();
             } else {
                 wait();
