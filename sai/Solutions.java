@@ -615,3 +615,65 @@ class ZeroEvenOdd {
         }
     }
 }
+
+//Solution 3 : Semaphore 
+class ZeroEvenOdd {
+    private int n;
+    private volatile int status = 0;
+    private Semaphore zero;
+    private Semaphore odd;
+    private Semaphore even;
+
+    public ZeroEvenOdd(int n) {
+        this.n = n;
+        this.zero = new Semaphore(1);  // Be careful Semaphore of zero is 1. each even or odd is called, zero will be released.
+        this.odd = new Semaphore(0); // first release(), then acquire() 
+        this.even = new Semaphore(0); // first release(), then acquire() 
+    }
+
+    // printNumber.accept(x) outputs "x", where x is an integer.
+    public void zero(IntConsumer printNumber) throws InterruptedException {
+
+        for (int i = 1; i <= n; i++) {
+            try {
+                zero.acquire();
+                printNumber.accept(0);
+                status = (i % 2) + 1; // 1 is even and 2 is odd.
+
+            } finally {
+                if (status == 1) {
+                    even.release(); 
+                } else {
+                    odd.release();
+                }
+            }
+        }
+
+    }
+
+    public void even(IntConsumer printNumber) throws InterruptedException {
+
+        for (int i = 2; i <= n; i = i + 2) {
+
+            try {
+                even.acquire();
+                printNumber.accept(i);
+            } finally {
+                zero.release();
+            }
+        }
+
+    }
+
+    public void odd(IntConsumer printNumber) throws InterruptedException {
+        for (int i = 1; i <= n; i = i + 2) {
+            try {
+                odd.acquire();
+                printNumber.accept(i);
+            } finally {
+                zero.release();
+            }
+        }
+
+    }
+}
