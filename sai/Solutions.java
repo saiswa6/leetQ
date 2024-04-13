@@ -471,3 +471,72 @@ class BoundedBlockingQueue {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+/*
+Question
+1116. Print Zero Even Odd
+You have a function printNumber that can be called with an integer parameter and prints it to the console.
+
+Implement the ZeroEvenOdd class:
+ZeroEvenOdd(int n) Initializes the object with the number n that represents the numbers that should be printed.
+void zero(printNumber) Calls printNumber to output one zero.
+void even(printNumber) Calls printNumber to output one even number.
+void odd(printNumber) Calls printNumber to output one odd number.
+
+Example 1:
+Input: n = 2
+Output: "0102"
+Explanation: There are three threads being fired asynchronously.
+One of them calls zero(), the other calls even(), and the last one calls odd().
+"0102" is the correct output.
+*/
+
+//Solution 1 : Synchronized
+
+class ZeroEvenOdd {
+    private int n;
+    // private Semaphore
+    private volatile int status = 0;
+
+    public ZeroEvenOdd(int n) {
+        this.n = n;
+    }
+
+    // printNumber.accept(x) outputs "x", where x is an integer.
+    public synchronized void zero(IntConsumer printNumber) throws InterruptedException {
+
+        for (int i = 1; i <= n; i++) {
+            while (status != 0) {      //Put this while block for status inside for loop to maintain context of i = 0, 1, 2, 3,....
+                wait();
+            }
+            printNumber.accept(0);
+            status = (i % 2) + 1;
+            notifyAll();
+        }
+
+    }
+
+    public synchronized void even(IntConsumer printNumber) throws InterruptedException {
+
+        for (int i = 2; i <= n; i = i + 2) {
+            while (status != 1) {
+                wait();
+            }
+            printNumber.accept(i);
+            status = 0;
+            notifyAll();
+        }
+
+    }
+
+    public synchronized void odd(IntConsumer printNumber) throws InterruptedException {
+
+        for (int i = 1; i <= n; i = i + 2) {
+            while (status != 2) {
+                wait();
+            }
+            printNumber.accept(i);
+            status = 0;
+            notifyAll();
+        }
+    }
+}
