@@ -1164,3 +1164,106 @@ class ListNode{
                 return size() > capacity;
             }
         };*/
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//Question : File Search
+//SOlution :
+// FileSearchRunner
+package org.concurrency.Questions.FileSearch.Imp1;
+
+import java.io.File;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+public class FileSearchRunner implements Runnable{
+    private String fileToBeSearched;
+    private BlockingQueue<File> directories;
+    private AtomicBoolean isFileFound;
+
+    public FileSearchRunner(String fileToBeSearched, BlockingQueue<File> directories, AtomicBoolean isFileFound) {
+        this.fileToBeSearched = fileToBeSearched;
+        this.directories = directories;
+        this.isFileFound = isFileFound;
+    }
+
+    @Override
+    public void run() {
+        while(!directories.isEmpty() && !isFileFound.get()) {
+            try{
+                File file =directories.take();
+                performRecursiveSearch(file, fileToBeSearched);
+            } catch (InterruptedException ie) {
+                System.out.println("Interrupt signal received");
+                return;
+            }
+        }
+    }
+
+    public void performRecursiveSearch(File file, String fileToBeSearched) {
+        File [] files = file.listFiles();
+
+        if(files == null || files.length == 0) {
+            return;
+        }
+
+        for(File eachFile : files) {
+            if(isFileFound.get()) {
+                return;
+            }
+
+            if(eachFile.isDirectory()) {
+                performRecursiveSearch(eachFile, fileToBeSearched);
+            } else {
+                if(eachFile.getName().equals(fileToBeSearched)) {
+                    System.out.println(" File found at path " + eachFile.getAbsolutePath());
+                    isFileFound.set(true);
+                    return;
+                }
+            }
+        }
+    }
+}
+// File Search Main
+package org.concurrency.Questions.FileSearch.Imp1;
+
+
+import java.io.File;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+public class FileSearchMain {
+    public static void main(String[] args) {
+        File directory = new File("C:\\SaiPrograms\\");
+        String fileNameToBeSearched = "SpringSecurityProjectTips";
+
+        BlockingQueue<File> directories = new LinkedBlockingDeque<>();
+
+        AtomicBoolean isFileFound = new AtomicBoolean(false);
+
+        File[] allFilesInGivenDirectory = directory.listFiles();
+
+        for(File file : allFilesInGivenDirectory) {
+            if(file.isDirectory()) {
+                directories.add(file);
+            } else if(file.getName().equals(fileNameToBeSearched)){
+                isFileFound.set(true);
+                System.out.println("File found in path : " + file.getAbsolutePath());
+            }
+        }
+
+        ExecutorService executorService = Executors.newFixedThreadPool(12);
+
+        for(int i=0;i < 12; i++) {
+            executorService.submit(new FileSearchRunner(fileNameToBeSearched, directories, isFileFound));
+        }
+
+
+        executorService.shutdown();
+    }
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//Question :
