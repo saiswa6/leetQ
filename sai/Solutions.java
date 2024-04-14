@@ -1065,3 +1065,102 @@ class TrafficLight {
         
     }
 }
+//=============================================================================================================================
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//Question LRU Cache 
+/*
+Design a data structure that follows the constraints of a Least Recently Used (LRU) cache.
+
+Implement the LRUCache class:
+LRUCache(int capacity) Initialize the LRU cache with positive size capacity.
+int get(int key) Return the value of the key if the key exists, otherwise return -1.
+void put(int key, int value) Update the value of the key if the key exists. Otherwise, add the key-value pair to the cache. If the number of keys exceeds the capacity from this operation, evict the least recently used key.
+*/
+//Solution 1: DOubly Linked List and HashMap
+class NormalLRUCache {
+    int capacity;
+    Map<Integer, ListNode> map;
+    ListNode head;
+    ListNode tail;
+
+    public NormalLRUCache(int capacity) {
+        this.capacity = capacity;
+        map = new HashMap<>();
+        head = new ListNode(-1,-1);
+        tail = new ListNode(-1,-1);
+        head.next = tail;
+        tail.prev = head;
+
+    }
+
+    public int get(int key) {
+        if(!map.containsKey(key)) {
+            return -1;
+        }
+
+        ListNode node = map.get(key);
+        remove(node);
+        add(node);
+        return node.value;
+    }
+
+    public void put(int key, int value) {
+        if(map.containsKey(key)){
+            ListNode oldListNode = map.get(key);
+            remove(oldListNode);
+        }
+
+        ListNode node = new ListNode(key, value);
+        map.put(key, node);
+        add(node);
+
+        if(map.size() > capacity) {
+            ListNode ListNodeToBeDeleted = head.next;
+            remove(ListNodeToBeDeleted);
+            map.remove(ListNodeToBeDeleted.key);
+        }
+    }
+
+    public void add(ListNode node) {
+        ListNode previousEnd = tail.prev;
+        previousEnd.next = node;
+        node.prev = previousEnd;
+        node.next = tail;
+        tail.prev = node;
+    }
+
+    public void remove(ListNode node) {
+        node.prev.next = node.next;
+        node.next.prev = node.prev;
+    }
+}
+
+class ListNode{
+    int key;
+    int value;
+    ListNode prev;
+    ListNode next;
+
+    public ListNode(int key, int value) {
+        this.key = key;
+        this.value = value;
+    }
+}
+//Solution 2: Synchronized
+// SOlution 3: Reentrant Lock
+// SOlution ReentrantReadWriteLock
+// Solution 4 : ConcurrentHashMap is used for thread-safe put and get operations.
+//ConcurrentLinkedDeque is used to maintain the order of nodes in the doubly linked list.
+// Solution : LinkedHashMap LinkedHashMap, which is a hash map that maintains insertion order. It essentially implements the linked list for us in the same data structure as the hash map, with the add and remove methods built into the hash map operations.
+
+/*LinkedHashMap<Integer, Integer> dic;
+
+    public LRUCache(int capacity) {
+        this.capacity = capacity;
+        dic = new LinkedHashMap<>(5, 0.75f, true) { // access order is true
+            @Override
+            protected boolean removeEldestEntry(Map.Entry<Integer, Integer> eldest) {
+                return size() > capacity;
+            }
+        };*/
