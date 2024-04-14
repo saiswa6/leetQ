@@ -1987,3 +1987,221 @@ public class StackUsingLLAtomic<T> {
         System.out.println(stack.pop());  // Output: 1
     }
 }
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// Question : Implement a thread-safe data structure which can keep track of number of incoming requests grouped by IP Address over a time window. Add support for grouping by other attributes such as BrowserAgent.
+
+//Solution 1 :  keep methods as synchronized
+//Solution 2 : Use reentrant lock
+//Solution 2 : Use reentrantreadwrite lock
+import java.util.HashMap;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+public class ThreadSafeBrowser {
+    private HashMap<String, Integer> ipMap;
+    private HashMap<String,Integer> browserAgentMap;
+
+    private ReentrantReadWriteLock ipLock = new ReentrantReadWriteLock();
+    private ReentrantReadWriteLock browserAgentLock = new ReentrantReadWriteLock();
+
+    public ThreadSafeBrowser(){
+        ipMap = new HashMap<>();
+        browserAgentMap = new HashMap<>();
+    }
+
+
+    public void incrementRequestCountByIp(String ipAddress) {
+        ipLock.writeLock().lock();
+        try{
+            ipMap.put(ipAddress, ipMap.getOrDefault(ipAddress, 0) + 1);
+        } finally {
+            ipLock.writeLock().unlock();
+        }
+    }
+
+    public void incrementRequestCountByBrowserAgent(String browserAgent) {
+        browserAgentLock.writeLock().lock();
+        try{
+            browserAgentMap.put(browserAgent, browserAgentMap.getOrDefault(browserAgent, 0) + 1);
+        } finally {
+            browserAgentLock.writeLock().unlock();
+        }
+    }
+
+    public int getRequestCountByIp(String ipAddress) {
+        ipLock.readLock().lock();
+        try {
+            {
+                return ipMap.getOrDefault(ipAddress,0);
+            }
+        } finally {
+            ipLock.readLock().unlock();
+        }
+    }
+
+    public int getRequestCountByBrowserAgent(String browserAgent) {
+        browserAgentLock.readLock().lock();
+        try {
+            return browserAgentMap.getOrDefault(browserAgent, 0);
+        } finally {
+            browserAgentLock.readLock().unlock();
+        }
+    }
+
+    public static void main(String[] args) {
+        ThreadSafeBrowser counter = new ThreadSafeBrowser();
+
+        // Simulate incoming requests
+        for (int i = 0; i < 10; i++) {
+            counter.incrementRequestCountByIp("192.168.1.1");
+            counter.incrementRequestCountByBrowserAgent("Chrome");
+        }
+
+        for (int i = 0; i < 5; i++) {
+            counter.incrementRequestCountByIp("192.168.1.2");
+            counter.incrementRequestCountByBrowserAgent("Firefox");
+        }
+
+        // Print request counts
+        System.out.println("Requests from IP Address 192.168.1.1: " + counter.getRequestCountByIp("192.168.1.1"));
+        System.out.println("Requests from IP Address 192.168.1.2: " + counter.getRequestCountByIp("192.168.1.2"));
+        System.out.println("Requests from Browser Agent Chrome: " + counter.getRequestCountByBrowserAgent("Chrome"));
+        System.out.println("Requests from Browser Agent Firefox: " + counter.getRequestCountByBrowserAgent("Firefox"));
+    }
+}
+// Solutin 4 :
+//  custom ConcurrentHashMap
+
+public class RequestCounterCustomMap {
+
+    private static final int DEFAULT_CAPACITY = 16;
+    private final Entry[] ipEntries;
+    private final Entry[] browserAgentEntries;
+    private final ReentrantReadWriteLock[] ipLocks;
+    private final ReentrantReadWriteLock[] browserAgentLocks;
+
+    public RequestCounterCustomMap() {
+        this.ipEntries = new Entry[DEFAULT_CAPACITY];
+        this.browserAgentEntries = new Entry[DEFAULT_CAPACITY];
+        this.ipLocks = new ReentrantReadWriteLock[DEFAULT_CAPACITY];
+        this.browserAgentLocks = new ReentrantReadWriteLock[DEFAULT_CAPACITY];
+        for (int i = 0; i < DEFAULT_CAPACITY; i++) {
+            this.ipLocks[i] = new ReentrantReadWriteLock();
+            this.browserAgentLocks[i] = new ReentrantReadWriteLock();
+        }
+    }
+
+    public void incrementRequestCountByIp(String ipAddress) {
+        int hash = hash(ipAddress.hashCode());
+        int index = hash % ipEntries.length;
+        ipLocks[index].writeLock().lock();
+        try {
+            Entry current = ipEntries[index];
+            while (current != null && !current.key.equals(ipAddress)) {
+                current = current.next;
+            }
+            if (current != null) {
+                current.count++;
+            } else {
+                addEntry(ipAddress, index, ipEntries);
+            }
+        } finally {
+            ipLocks[index].writeLock().unlock();
+        }
+    }
+
+
+    public int getRequestCountByIp(String ipAddress) {
+        int hash = hash(ipAddress.hashCode());
+        int index = hash % ipEntries.length;
+        ipLocks[index].readLock().lock();
+        try {
+            Entry current = ipEntries[index];
+            while (current != null && !current.key.equals(ipAddress)) {
+                current = current.next;
+            }
+            return current != null ? current.count : 0;
+        } finally {
+            ipLocks[index].readLock().unlock();
+        }
+    }
+
+    private int hash(int hashCode) {
+        return hashCode & 0x7fffffff; // Ensure positive hash value
+    }
+
+    private static class Entry {
+        String key;
+        int count;
+        Entry next;
+
+        Entry(String key) {
+            this.key = key;
+            this.count = 1;
+        }
+    }
+
+    public static void main(String[] args) {
+        RequestCounterCustomMap counter = new RequestCounterCustomMap();
+
+        // Simulate incoming requests
+        for (int i = 0; i < 10; i++) {
+            counter.incrementRequestCountByIp("192.168.1.1");
+            counter.incrementRequestCountByBrowserAgent("Chrome");
+        }
+
+        for (int i = 0; i < 5; i++) {
+            counter.incrementRequestCountByIp("192.168.1.2");
+            counter.incrementRequestCountByBrowserAgent("Firefox");
+        }
+
+        // Print request counts
+        System.out.println("Requests from IP Address 192.168.1.1: " + counter.getRequestCountByIp("192.168.1.1"));
+        System.out.println("Requests from IP Address 192.168.1.2: " + counter.getRequestCountByIp("192.168.1.2"));
+        System.out.println("Requests from Browser Agent Chrome: " + counter.getRequestCountByBrowserAgent("Chrome"));
+        System.out.println("Requests from Browser Agent Firefox: " + counter.getRequestCountByBrowserAgent("Firefox"));
+    }
+}
+// Solution 5 : concurrent hashma
+
+public class RequestCounterConcurrentMap {
+    private final ConcurrentHashMap<String, Integer> ipRequestCounts = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, Integer> browserAgentRequestCounts = new ConcurrentHashMap<>();
+
+    public void incrementRequestCountByIp(String ipAddress) {
+        ipRequestCounts.compute(ipAddress, (k, v) -> (v == null) ? 1 : v + 1);
+    }
+
+    public void incrementRequestCountByBrowserAgent(String browserAgent) {
+        browserAgentRequestCounts.compute(browserAgent, (k, v) -> (v == null) ? 1 : v + 1);
+    }
+
+    public int getRequestCountByIp(String ipAddress) {
+        return ipRequestCounts.getOrDefault(ipAddress, 0);
+    }
+
+    public int getRequestCountByBrowserAgent(String browserAgent) {
+        return browserAgentRequestCounts.getOrDefault(browserAgent, 0);
+    }
+
+    public static void main(String[] args) {
+        RequestCounterConcurrentMap counter = new RequestCounterConcurrentMap();
+
+        // Simulate incoming requests
+        for (int i = 0; i < 10; i++) {
+            counter.incrementRequestCountByIp("192.168.1.1");
+            counter.incrementRequestCountByBrowserAgent("Chrome");
+        }
+
+        for (int i = 0; i < 5; i++) {
+            counter.incrementRequestCountByIp("192.168.1.2");
+            counter.incrementRequestCountByBrowserAgent("Firefox");
+        }
+
+        // Print request counts
+        System.out.println("Requests from IP Address 192.168.1.1: " + counter.getRequestCountByIp("192.168.1.1"));
+        System.out.println("Requests from IP Address 192.168.1.2: " + counter.getRequestCountByIp("192.168.1.2"));
+        System.out.println("Requests from Browser Agent Chrome: " + counter.getRequestCountByBrowserAgent("Chrome"));
+        System.out.println("Requests from Browser Agent Firefox: " + counter.getRequestCountByBrowserAgent("Firefox"));
+    }
+}
