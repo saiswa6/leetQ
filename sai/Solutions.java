@@ -2205,3 +2205,92 @@ public class RequestCounterConcurrentMap {
         System.out.println("Requests from Browser Agent Firefox: " + counter.getRequestCountByBrowserAgent("Firefox"));
     }
 }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//Question : Implement a threadsafe queue
+/*
+- enqueue() method adds an item to the end of the queue.
+- dequeue() method removes and returns the item at the front of the queue.
+- isEmpty() method checks if the queue is empty.
+  */
+
+public class ImplementQueueUsingLL<T> {
+    private Node<T> head;
+    private Node<T> tail;
+    private final ReentrantLock lock = new ReentrantLock();
+
+    private static class Node<T> {
+        T data;
+        Node<T> next;
+
+        Node(T data) {
+            this.data = data;
+            this.next = null;
+        }
+    }
+
+    public void enqueue(T item) {
+        Node<T> newNode = new Node<>(item);
+
+        lock.lock();
+        try {
+            if (tail == null) {
+                head = newNode;
+                tail = newNode;
+            } else {
+                tail.next = newNode;
+                tail = newNode;
+            }
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public T dequeue() {
+        lock.lock();
+        try {
+            if (head == null) {
+                throw new NoSuchElementException("Queue is empty");
+            }
+            T item = head.data;
+            head = head.next;
+
+            if (head == null) {
+                tail = null;
+            }
+            return item;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public boolean isEmpty() {
+        lock.lock();
+        try {
+            return head == null;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public static void main(String[] args) {
+        ImplementQueueUsingLL<Integer> queue = new ImplementQueueUsingLL<>();
+
+        // Enqueue some items
+        for (int i = 1; i <= 5; i++) {
+            queue.enqueue(i);
+        }
+
+        // Dequeue and print items
+        while (!queue.isEmpty()) {
+            System.out.println(queue.dequeue());
+        }
+
+        // Try to dequeue from an empty queue
+        try {
+            queue.dequeue();
+        } catch (NoSuchElementException e) {
+            System.out.println("Queue is empty");
+        }
+    }
+}
