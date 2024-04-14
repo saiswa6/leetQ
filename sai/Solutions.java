@@ -1649,4 +1649,182 @@ public class CalendarService {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-// Question : 
+// Question : Write Read Seek
+/*
+write(byte[] data, int len) writes the given data to the block-based storage.
+read(byte[] data, int len) reads the specified number of bytes from the block-based storage into the provided buffer.
+seek(int location) moves the current position to the specified byte in the block-based storage.
+
+// Following APIs are provided by underneath block based Interface to you:
+//  int bSeek(size_t blockNum);
+//  int bWrite(void *blockPtr);
+//  int bRead(void *blockPtr);
+//  int bBlockSize();
+//  Example input:
+//   seek(12)  : seeks to x byte
+//   write(data1, 15)
+//   write(data2, 16)
+//   seek(17)
+//   read(data3, 2) : read 2 bytes from <seek> into data3
+
+*/
+//Solution
+//============================
+/*
+ block = 8 bytes
+ consider 64 blocks = 512 bytes
+
+Take current Block and current Position
+private final int BLOCK_SIZE = 8;
+private final byte[] blocks = new byte[512];
+ */
+public class ByteIO {
+
+    private final BlockIO blockIO;
+    private int currentBlock;  // consider
+    private int currentPosition;
+
+    //private final int BLOCK_SIZE = 8;
+    //private final byte[] blocks = new byte[512];
+
+    public ByteIO(BlockIO blockIO) {
+        this.blockIO = blockIO;
+        this.currentBlock = 0;
+        this.currentPosition = 0;
+    }
+
+    public int write(byte[] data, int len) {
+        int totalWritten = 0;
+
+        while (totalWritten < len) {
+            int remainingInBlock = blockIO.bBlockSize() - currentPosition;
+            int bytesToWrite = Math.min(remainingInBlock, len - totalWritten);
+
+            byte[] blockData = blockIO.bRead(currentBlock);
+            /* Replacement for blockIO.bRead(currentBlock) :
+                    byte[] blockData = new byte[BLOCK_SIZE];
+                    System.arraycopy(blocks, BLOCK_SIZE * currentBlock, blockData, 0, BLOCK_SIZE);
+             */
+            System.arraycopy(data, totalWritten, blockData, currentPosition, bytesToWrite);
+            blockIO.bWrite(currentBlock, blockData);
+            /*  Replacement for blockIO.bWrite(currentBlock, blockData) :
+                    System.arraycopy(blockData, 0, blocks, BLOCK_SIZE * currentBlock, BLOCK_SIZE);
+             */
+
+            totalWritten += bytesToWrite;
+            currentPosition += bytesToWrite;
+
+            if (currentPosition == blockIO.bBlockSize()) { // BLOCK_SIZE
+                currentBlock++;
+                currentPosition = 0;
+            }
+        }
+
+        return totalWritten;
+    }
+
+    public int read(byte[] data, int len) {
+        int totalRead = 0;
+
+        while (totalRead < len) {
+            int remainingInBlock = blockIO.bBlockSize() - currentPosition;
+            int bytesToRead = Math.min(remainingInBlock, len - totalRead);
+
+            byte[] blockData = blockIO.bRead(currentBlock);
+            /* Replacement for blockIO.bRead(currentBlock) :
+                    byte[] blockData = new byte[BLOCK_SIZE];
+                    System.arraycopy(blocks, BLOCK_SIZE * currentBlock, blockData, 0, BLOCK_SIZE);
+             */
+            System.arraycopy(blockData, currentPosition, data, totalRead, bytesToRead);
+
+            totalRead += bytesToRead;
+            currentPosition += bytesToRead;
+
+            if (currentPosition == blockIO.bBlockSize()) {
+                currentBlock++;
+                currentPosition = 0;
+            }
+        }
+
+        return totalRead;
+    }
+
+    public int seek(int location) {
+        if (location < 0) {
+            return -1;
+        }
+
+        currentBlock = location / blockIO.bBlockSize();
+        currentPosition = location % blockIO.bBlockSize();
+
+        return 0;
+    }
+
+    public static void main(String[] args) {
+        BlockIO blockIO = new SimpleBlockIO();
+        ByteIO byteIO = new ByteIO(blockIO);
+
+        byte[] data1 = "Hello".getBytes();
+        byte[] data2 = "World".getBytes();
+        byte[] data3 = new byte[2];
+
+        byteIO.seek(12);
+        byteIO.write(data1, 5);
+        byteIO.write(data2, 5);
+        byteIO.seek(17);
+        byteIO.read(data3, 2);
+
+        System.out.println(new String(data3));  // Output: Wo
+    }
+}
+
+class SimpleBlockIO implements BlockIO {
+    private final int BLOCK_SIZE = 8;
+    private final byte[] blocks = new byte[512];
+
+    @Override
+    public int bSeek(int blockNum) {
+        if (blockNum < 0 || blockNum >= blocks.length / BLOCK_SIZE) {
+            return -1;
+        }
+        return 0;
+    }
+
+    @Override
+    public int bWrite(int blockNum, byte[] blockData) {
+        System.arraycopy(blockData, 0, blocks, BLOCK_SIZE * blockNum, BLOCK_SIZE);
+        return 0;
+    }
+
+    @Override
+    public byte[] bRead(int blockNum) {
+        byte[] blockData = new byte[BLOCK_SIZE];
+        System.arraycopy(blocks, BLOCK_SIZE * blockNum, blockData, 0, BLOCK_SIZE);
+        return blockData;
+    }
+
+    @Override
+    public int bBlockSize() {
+        return BLOCK_SIZE;
+    }
+}
+
+interface BlockIO {
+    int bSeek(int blockNum);
+    int bWrite(int blockNum, byte[] blockData);
+    byte[] bRead(int blockNum);
+    int bBlockSize();
+}
+// Solution 2
+// synchronized blocks are used to synchronize access to the shared resources (currentBlock and currentPosition), ensuring thread-safe access to these variables 
+//and preventing race conditions.
+
+// SOlution 3
+// Reentrant Lock
+
+//Solution 4
+/*ReentrantReadWriteLock:
+- ReentrantReadWriteLock to synchronize access to the shared resources (currentBlock and currentPosition).
+- The read method uses a read lock, allowing multiple threads to read simultaneously but preventing writing while reading is in progress.
+- The write method uses a write lock, ensuring that no other threads can read or write while a write operation is in progress.
+  */
