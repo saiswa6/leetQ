@@ -2294,3 +2294,306 @@ public class ImplementQueueUsingLL<T> {
         }
     }
 }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// Question : how to write a concurrent thread safe List data structure with constant time operations.
+//Solution : The add, remove, contains, size, and get operations have a time complexity of O(n) in the worst-case scenario because we need to traverse the list to perform these operations.
+public class ConcurrentList<T> {
+
+    private static class Node<T> {
+        T data;
+        Node<T> next;
+
+        Node(T data) {
+            this.data = data;
+        }
+    }
+
+    private final ReentrantLock lock = new ReentrantLock();
+    private Node<T> head;
+    private Node<T> tail;
+
+    public ConcurrentList() {
+        head = new Node<>(null); // dummy head
+        tail = new Node<>(null); // dummy tail
+        head.next = tail;
+    }
+
+    public void add(T data) {
+        Node<T> newNode = new Node<>(data);
+        lock.lock();
+        try {
+            newNode.next = tail;
+            Node<T> prev = head;
+            while (prev.next != tail) {
+                prev = prev.next;
+            }
+            prev.next = newNode;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public boolean remove(T data) {
+        lock.lock();
+        try {
+            Node<T> prev = head;
+            Node<T> current = head.next;
+            while (current != tail) {
+                if (current.data.equals(data)) {
+                    prev.next = current.next;
+                    return true;
+                }
+                prev = current;
+                current = current.next;
+            }
+            return false;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public boolean contains(T data) {
+        lock.lock();
+        try {
+            Node<T> current = head.next;
+            while (current != tail) {
+                if (current.data.equals(data)) {
+                    return true;
+                }
+                current = current.next;
+            }
+            return false;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public int size() {
+        lock.lock();
+        try {
+            int count = 0;
+            Node<T> current = head.next;
+            while (current != tail) {
+                count++;
+                current = current.next;
+            }
+            return count;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public T get(int index) {
+        lock.lock();
+        try {
+            if (index < 0) {
+                return null;
+            }
+            Node<T> current = head.next;
+            for (int i = 0; i < index; i++) {
+                if (current == tail) {
+                    return null;
+                }
+                current = current.next;
+            }
+            return current.data;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public static void main(String[] args) {
+        ConcurrentList<String> list = new ConcurrentList<>();
+
+        list.add("A");
+        list.add("B");
+        list.add("C");
+
+        System.out.println("Contains B: " + list.contains("B"));  // true
+
+        list.remove("B");
+
+        System.out.println("Contains B after removal: " + list.contains("B"));  // false
+        System.out.println("Size: " + list.size());  // 2
+        System.out.println("Element at index 1: " + list.get(1));  // C
+    }
+}
+//Solution 2 : One approach is to use a combination of a hash table and a linked list to achieve the desired complexity.
+/*
+ - ReentrantLock is used to provide thread-safe access to the shared data structure.
+ - HashMap is used to maintain a mapping of the object's identity hash code to its corresponding node in the linked list.
+ - Constant-time operations are achieved by maintaining the head and tail sentinel nodes and using the hash map for quick access to the nodes.
+
+Note: This implementation uses System.identityHashCode(data) to generate the hash code of the data objects.
+This is used to uniquely identify objects and is used as a key in the hash map.*/
+public class ConcurrentList<T> {
+
+    private final Map<Integer, Node<T>> indexMap;
+    private final ReentrantLock lock = new ReentrantLock();
+    private Node<T> head;
+    private Node<T> tail;
+
+    private static class Node<T> {
+        T data;
+        Node<T> next;
+        Node<T> prev;
+
+        Node(T data) {
+            this.data = data;
+        }
+    }
+
+    public ConcurrentList() {
+        this.indexMap = new HashMap<>();
+        this.head = new Node<>(null);
+        this.tail = new Node<>(null);
+        head.next = tail;
+        tail.prev = head;
+    }
+
+    public void add(T data) {
+        lock.lock();
+        try {
+            Node<T> newNode = new Node<>(data);
+            tail.prev.next = newNode;
+            newNode.prev = tail.prev;
+            newNode.next = tail;
+            tail.prev = newNode;
+            indexMap.put(System.identityHashCode(data), newNode);
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public boolean remove(T data) {
+        lock.lock();
+        try {
+            Node<T> node = indexMap.get(System.identityHashCode(data));
+            if (node != null) {
+                node.prev.next = node.next;
+                node.next.prev = node.prev;
+                indexMap.remove(System.identityHashCode(data));
+                return true;
+            }
+            return false;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public boolean contains(T data) {
+        lock.lock();
+        try {
+            return indexMap.containsKey(System.identityHashCode(data));
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public int size() {
+        lock.lock();
+        try {
+            return indexMap.size();
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public T get(int index) {
+        lock.lock();
+        try {
+            Node<T> current = head.next;
+            for (int i = 0; i < index; i++) {
+                if (current == tail) {
+                    return null;
+                }
+                current = current.next;
+            }
+            return current.data;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public static void main(String[] args) {
+        ConcurrentList<String> list = new ConcurrentList<>();
+
+        list.add("A");
+        list.add("B");
+        list.add("C");
+
+        System.out.println("Contains B: " + list.contains("B"));  // true
+
+        list.remove("B");
+
+        System.out.println("Contains B after removal: " + list.contains("B"));  // false
+        System.out.println("Size: " + list.size());  // 2
+        System.out.println("Element at index 1: " + list.get(1));  // C
+    }
+}
+//Solution 3 : 
+/*
+ We use a ConcurrentHashMap to store the elements of the list and a ConcurrentLinkedQueue to maintain the order of the elements.
+- The add, remove, contains, and size methods are constant time operations, as they operate directly on the ConcurrentHashMap and ConcurrentLinkedQueue.
+- The get method has a time complexity of O(n) in the worst-case scenario because we use stream().skip(index).findFirst() to get the element at a given index.
+   */
+
+public class ConcurrentList<T> {
+
+    private final ConcurrentHashMap<T, Boolean> map;
+    private final ConcurrentLinkedQueue<T> queue;
+
+    public ConcurrentList() {
+        this.map = new ConcurrentHashMap<>();
+        this.queue = new ConcurrentLinkedQueue<>();
+    }
+
+    public void add(T data) {
+        if (map.putIfAbsent(data, Boolean.TRUE) == null) {
+            queue.offer(data);
+        }
+    }
+
+    public boolean remove(T data) {
+        if (map.remove(data) != null) {
+            queue.remove(data);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean contains(T data) {
+        return map.containsKey(data);
+    }
+
+    public int size() {
+        return map.size();
+    }
+
+    public T get(int index) {
+        if (index < 0 || index >= map.size()) {
+            return null;
+        }
+        return queue.stream().skip(index).findFirst().orElse(null);
+    }
+
+    public static void main(String[] args) {
+        ConcurrentList<String> list = new ConcurrentList<>();
+
+        list.add("A");
+        list.add("B");
+        list.add("C");
+
+        System.out.println("Contains B: " + list.contains("B"));  // true
+
+        list.remove("B");
+
+        System.out.println("Contains B after removal: " + list.contains("B"));  // false
+        System.out.println("Size: " + list.size());  // 2
+        System.out.println("Element at index 1: " + list.get(1));  // C
+    }
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// Question : 
