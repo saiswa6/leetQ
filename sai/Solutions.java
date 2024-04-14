@@ -1828,3 +1828,70 @@ interface BlockIO {
 - The read method uses a read lock, allowing multiple threads to read simultaneously but preventing writing while reading is in progress.
 - The write method uses a write lock, ensuring that no other threads can read or write while a write operation is in progress.
   */
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//Question : implement thread-safe stack using a linkedlist. Push and pop should be O(1). This problem is pretty similar to Design Bounded Blocking Queue.
+//Solution 1 : Implement Normally
+public class StackUsingLinkedList {
+  static class ListNode{
+    int value;
+    ListNode next;
+    public ListNode(int value) {
+        this.value = value;
+    }
+
+   }
+    private ListNode top;
+    private volatile int size = 0;
+
+    public synchronized void push(int item){
+        ListNode newNode = new ListNode(item);
+        newNode.next = top;
+        top = newNode;
+        size++;
+    }
+
+    public synchronized int pop(){
+        if(isEmpty()) {
+            throw new java.util.NoSuchElementException("Stack is emoty");
+        }
+
+        int item = top.value;
+        top = top.next;
+        size--;
+        return item;
+    }
+
+    public synchronized int peek(){
+        if(isEmpty()) {
+            throw new java.util.NoSuchElementException("Stack is emoty");
+        }
+
+        int item = top.value;
+        return item;
+    }
+
+
+    public synchronized  boolean isEmpty(){
+        return top == null;
+    }
+
+    public synchronized int size(){
+        return size;
+    }
+
+    public static void main(String[] args) {
+        StackUsingLinkedList stack = new StackUsingLinkedList();
+        stack.push(1);
+        stack.push(2);
+        stack.push(3);
+
+        System.out.println(stack.pop());
+        System.out.println(stack.size());
+        System.out.println(stack.pop());
+        System.out.println(stack.pop());
+    }
+}
+// SOlution 2 : By synchronizing these methods, we ensure that multiple threads can safely access and modify the stack without causing race conditions
+// SOlution 3 : Use Reentrant Lock
+// SOlution 4 : Use ReentrantReadWriteLock
