@@ -1266,4 +1266,160 @@ public class FileSearchMain {
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//Question :
+//Question : Matrix Multiplication
+//SOlution 1 : without multithreading
+package org.concurrency.Questions.MatrixMultiplication.Imp1;
+
+public class MatrixMultiplication {
+
+    public static int[][] multiplyMatrices(int[][] matrixA, int[][] matrixB) {
+        if (matrixA[0].length != matrixB.length) {
+            throw new IllegalArgumentException("Invalid dimensions for matrix multiplication");
+        }
+
+        int m = matrixA.length;  // rows in first matrix
+        int n = matrixA[0].length; // columns in first matrix or rows in second matrix
+        int p = matrixB[0].length; // columns in second matrix
+
+        int[][] result = new int[m][p];
+
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < p; j++) {
+                for (int k = 0; k < n; k++) {
+                    result[i][j] += matrixA[i][k] * matrixB[k][j];
+                }
+            }
+        }
+
+        return result;
+    }
+
+
+    public static void main(String[] args) {
+        int[][] matrixA = {
+                {1, 2, 3},
+                {4, 5, 6},
+                {7, 8, 9}
+        };
+
+        int[][] matrixB = {
+                {9, 8, 7},
+                {6, 5, 4},
+                {3, 2, 1}
+        };
+
+        int[][] result = multiplyMatrices(matrixA, matrixB);
+
+        // Print the result matrix
+        for (int i = 0; i < result.length; i++) {
+            for (int j = 0; j < result[0].length; j++) {
+                System.out.print(result[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+}
+
+// Solution 2 : with multithreading 
+package org.concurrency.Questions.MatrixMultiplication.Imp2;
+
+public class MatrixMultiplication {
+    private static final int NUM_THREADS = 4;
+
+    static class MatrixMultiplier implements Runnable {
+        private final int[][] matrixA;
+        private final int[][] matrixB;
+        private final int[][] result;
+        private final int start;
+        private final int end;
+
+        public MatrixMultiplier(int[][] matrixA, int[][] matrixB, int[][] result, int start, int end) {
+            this.matrixA = matrixA;
+            this.matrixB = matrixB;
+            this.result = result;
+            this.start = start;
+            this.end = end;
+        }
+
+        @Override
+        public void run() {
+            int n = matrixA[0].length;
+            int p = matrixB[0].length;
+
+            for (int i = start; i < end; i++) {
+                int row = i / p;
+                int col = i % p;
+
+                for (int j = 0; j < n; j++) {
+                    result[row][col] += matrixA[row][j] * matrixB[j][col];
+                }
+            }
+        }
+    }
+
+    public static int[][] multiplyMatrices(int[][] matrixA, int[][] matrixB) {
+        if (matrixA[0].length != matrixB.length) {
+            throw new IllegalArgumentException("Invalid dimensions for matrix multiplication");
+        }
+
+        int m = matrixA.length;
+        int n = matrixA[0].length;
+        int p = matrixB[0].length;
+
+        int[][] result = new int[m][p];
+
+        Thread[] threads = new Thread[NUM_THREADS];
+        int cellsPerThread = (m * p) / NUM_THREADS; // divide computation per thread
+
+        for (int i = 0; i < NUM_THREADS; i++) {
+            int start = i * cellsPerThread;  // 0 * 2   (3*3 = 9 elements== 9 / 4 = 2)
+            int end = (i == NUM_THREADS - 1) ? m * p : (i + 1) * cellsPerThread;  // 1*2 =2
+            threads[i] = new Thread(new MatrixMultiplier(matrixA, matrixB, result, start, end));
+            threads[i].start();
+        }
+
+        // Wait for all threads to complete
+        for (Thread thread : threads) {
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return result;
+    }
+
+
+    public static void main(String[] args) {
+        int[][] matrixA = {
+                {1, 2, 3},
+                {4, 5, 6},
+                {7, 8, 9}
+        };
+
+        int[][] matrixB = {
+                {9, 8, 7},
+                {6, 5, 4},
+                {3, 2, 1}
+        };
+
+        int[][] result = multiplyMatrices(matrixA, matrixB);
+
+        // Print the result matrix
+        for (int i = 0; i < result.length; i++) {
+            for (int j = 0; j < result[0].length; j++) {
+                System.out.print(result[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    /*
+    30 24 18
+    84 69 54
+    138 114 90
+     */
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
