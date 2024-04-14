@@ -1423,3 +1423,167 @@ public class MatrixMultiplication {
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//Question : You have to transfer large files
+//Solution :
+/*
+- Compression is required to reduce the amount of data to be transferred. Compress the file to use minimal network bandwidth.
+- Deduplication may be required so that we don't need to send the same chunk multiple times. (data deduplication is a technique for eliminating duplicate copies of repeating data.
+  Successful implementation of the technique can improve storage utilization.  It can also be applied to network data transfers to reduce the number of bytes that must be sent.)
+
+- Whenever we have to transfer large files, the best way would be to send one big file in chunks.
+ We can have a program which creates chunks of the original file, and we send the chunks.
+  And at the receiver's end we will have some program which will basically collate the chunks into one single file.
+  By sending the file by chunks, if any file chunk transfer fails, we will have to only transfer the failed chunk again, and not the entire file.
+  Also we can spawn multiple threads to transfer multiple file parts in parallel.
+
+  Or we can use a ThreadPool with a message queue, all the file transfer jobs will be added to queue by the program which generates the parts from original file.
+
+- using a checksum to ensure data integrity while transferring the files
+- including a chunk_id (or part number) in each chunk being transferred to keep track of received chunks at the receiver end
+- Have an asynchronous setup to transfer chunks of the file.
+- On the receiving end, devise a merge algorithm to stitch all chunks.
+- in case of failures, receiver can request for a specific chunk_id. In case a chunk fails, we perform a retry strategy - depending on the HttpStatusCode from receiver's end.
+*/
+// LargeFileTransferAsyncWithChunkId
+
+public class LargeFileTransferAsyncWithChunkId {
+    private static final String DEST_IP = "10.10.12.14";
+    private static final int PORT = 1234;
+    private static final int CHUNK_SIZE = 1024 * 1024; // 1MB
+    private static int THREAD_POOL_SIZE = 10; //Number Of Threads
+
+    public static void main(String[] args) {
+        ExecutorService executorService = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
+
+        try(Socket socket = new Socket(DEST_IP,PORT);
+            BufferedOutputStream bos = new BufferedOutputStream(socket.getOutputStream());
+            FileInputStream fis = new FileInputStream("/path/to/source/largefile")){
+
+            byte buffer[] = new byte[CHUNK_SIZE];
+            long chunkId = 0;
+
+            while(fis.available() > 0) {
+                int bytesRead = fis.read(buffer);
+                if(bytesRead == -1 ) {
+                    break;
+                }
+
+                byte [] chunk = new byte[bytesRead];
+                System.arraycopy(buffer, 0, chunk, 0, bytesRead);
+                /*
+                The line System.arraycopy(buffer, 0, chunk, 0, bytesRead); is used to copy data from one array (buffer) to another array (chunk) with the
+                specified length (bytesRead). Here's what each parameter represents:
+
+                buffer: The source array from which data will be copied.
+                0: The starting position in the source array (buffer) from where the copying will begin.
+                chunk: The destination array where the copied data will be placed.
+                0: The starting position in the destination array (chunk) where the copied data will be placed.
+                bytesRead: The number of bytes to be copied from the source array (buffer) to the destination array (chunk).
+                                 */
+
+                // Add chunkId to the beginning of the chunk
+                byte[] chunkWithId = addChunkId(chunkId, chunk);
+
+                // Submit chunk transfer task to thread pool
+                executorService.submit(() -> {
+                    try {
+                        bos.write(chunkWithId);
+                        bos.flush();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+
+                chunkId++;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private static byte[] addChunkId(long chunkId, byte[] chunk) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        DataOutputStream dos = new DataOutputStream(baos);
+
+        try {
+            dos.writeLong(chunkId);  // Write chunkId as long
+            dos.write(chunk);       // Write chunk data
+            dos.flush();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return baos.toByteArray();
+    }
+}
+// LargeFileReceiverAsyncWithChunkId
+package org.concurrency.Questions.LargeFileTransfer.Imp1;
+
+import java.io.*;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+public class LargeFileReceiverAsyncWithChunkId {
+
+    private static final int PORT = 12345;
+    private static final int CHUNK_SIZE = 1024 * 1024; // 1 MB
+    private static final int THREAD_POOL_SIZE = 10; // Number of threads
+
+    public static void main(String[] args) {
+        ExecutorService executorService = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
+
+        try (ServerSocket serverSocket = new ServerSocket(PORT);
+             Socket socket = serverSocket.accept();
+             BufferedInputStream bis = new BufferedInputStream(socket.getInputStream());
+             FileOutputStream fos = new FileOutputStream("/path/to/destination/largefile")) {
+
+            byte[] buffer = new byte[CHUNK_SIZE];
+            long expectedChunkId = 0;
+
+            while (true) {
+                int bytesRead = bis.read(buffer, 0, buffer.length);
+                if (bytesRead == -1) {
+                    break;
+                }
+
+                // Extract chunkId and data from the received chunk
+                ByteArrayInputStream bais = new ByteArrayInputStream(buffer);
+                DataInputStream dis = new DataInputStream(bais);
+
+                long receivedChunkId = dis.readLong();
+                byte[] chunkData = new byte[bytesRead - Long.BYTES];
+                dis.readFully(chunkData);
+
+                if (receivedChunkId != expectedChunkId) {
+                    System.err.println("Unexpected chunkId: " + receivedChunkId);
+                    continue;
+                }
+
+                // Submit chunk assembly task to thread pool
+                executorService.submit(() -> {
+                    try {
+                        fos.write(chunkData);
+                        fos.flush();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+
+                expectedChunkId++;
+            }
+
+            // Shutdown the executor service
+            executorService.shutdown();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//Question : 
