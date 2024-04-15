@@ -3529,7 +3529,7 @@ public class MultithreadedTokenBucketFilter {
     public MultithreadedTokenBucketFilter(int maxTokens) {
         this.MAX_TOKENS = maxTokens;
 
-        //Never start a thread in a constructor
+        //Never start a thread in a constructor as the child thread can attempt to use the not-yet-fully constructed object using this. Instead use a Factory
         Thread daemonThread = new Thread(() -> {
             daemonThreadImplementation();
         });
