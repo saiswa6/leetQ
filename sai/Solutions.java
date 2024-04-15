@@ -3826,4 +3826,86 @@ public class CyclicBarrier3 {
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//Question : 
+//Question : Merge Sort
+// Implementation 1 : Single Threaded Solution
+/*
+Complexity Analysis of Merge Sort:
+Time Complexity:
+    Best Case: O(n log n), When the array is already sorted or nearly sorted.
+    Average Case: O(n log n), When the array is randomly ordered.
+    Worst Case: O(n log n), When the array is sorted in reverse order.
+    Space Complexity: O(n), Additional space is required for the temporary array used during merging.
+
+Advantages of Merge Sort:
+    Stability: Merge sort is a stable sorting algorithm, which means it maintains the relative order of equal elements in the input array.
+    Guaranteed worst-case performance: Merge sort has a worst-case time complexity of O(N logN), which means it performs well even on large datasets.
+    Simple to implement: The divide-and-conquer approach is straightforward.
+Disadvantage of Merge Sort:
+    Space complexity: Merge sort requires additional memory to store the merged sub-arrays during the sorting process. 
+    Not in-place: Merge sort is not an in-place sorting algorithm, which means it requires additional memory to store the sorted data. This can be a disadvantage in applications where memory usage is a concern.
+*/
+public class SingleThreadedMergeSort {
+    private static void mergeSort(int start, int end, int input[]) {
+        if(start == end) {
+            return;
+        }
+
+        int mid = start + (end - start) / 2;
+
+        //sort the first half
+        mergeSort(start, mid, input);
+
+        //merge the second half
+        mergeSort(mid+1, end, input);
+
+        //merge the two sorted arrays
+        int i = start;
+        int j = mid + 1;
+        int k;
+
+        int[] mergeArray = new int[start + end + 1];
+        for( k = start; k<=end;k++) {
+           mergeArray[k] = input[k];
+        }
+
+        k = start;
+
+        while (k <= end) {
+            if(i <= mid && j <= end) {
+                input[k] = Math.min(mergeArray[i], mergeArray[j]);
+
+                if(input[k] == mergeArray[i]) {
+                    i++;
+                } else {
+                    j++;
+                }
+            } else if (i <= mid && j > end) {
+                input[k] = mergeArray[i];
+                i++;
+            } else {
+                input[k] = mergeArray[j];
+                j++;
+            }
+            k++;
+        }
+    }
+
+    private static void printArray(int[] input, String msg) {
+        System.out.println();
+        System.out.print(msg + " ");
+        for (int i = 0; i < input.length; i++) {
+            System.out.print(" " + input[i] + " ");
+        }
+        System.out.println();
+    }
+
+    public static void main(String[] args) {
+        int input [] = new int[]{9,8,7,6,5,4,3,2,1,0};
+        printArray(input, "Before");
+        long before = System.currentTimeMillis();
+        mergeSort(0, input.length - 1, input);
+        long after = System.currentTimeMillis();
+        printArray(input, "After");
+        System.out.println("Difference : " + (after - before));
+    }
+}
