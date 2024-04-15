@@ -3451,4 +3451,67 @@ public class UberSeatingProblem {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//Question 
+//Question : Design Rate limiter with Token Bucket Filter
+//Solution : 
+/*
+The key to the problem is to find a way to track the number of available tokens when a consumer requests for a token. Note the rate at which the tokens are being generated is constant.
+*/
+import java.util.HashSet;
+import java.util.Set;
+
+public class TokenBucketFilter {
+    private int MAX_TOKENS ;
+
+    private int possibleTokens = 0;
+    private long lastRequestTime = System.currentTimeMillis();
+
+    public TokenBucketFilter(int maxTokens) {
+        this.MAX_TOKENS = maxTokens;
+    }
+
+    public synchronized void getToken() throws InterruptedException {
+        possibleTokens += (System.currentTimeMillis() - lastRequestTime) /1000;
+
+        if(possibleTokens> MAX_TOKENS) {
+            possibleTokens = MAX_TOKENS;
+        }
+
+        if(possibleTokens == 0) {
+            Thread.sleep(1000);
+        } else {
+            possibleTokens--;
+        }
+
+        lastRequestTime = System.currentTimeMillis();
+        System.out.println("Granting " + Thread.currentThread().getName() + " token at "+ System.currentTimeMillis());
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        TokenBucketFilter tokenBucketFilter = new TokenBucketFilter(5);
+
+        Set<Thread> threadSet = new HashSet<>();
+
+        Thread.sleep(6000);
+
+        for(int i = 0 ; i < 10; i++) {
+            Thread thread = new Thread(() -> {
+                try {
+                    tokenBucketFilter.getToken();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            thread.setName("Thread_"+(i + 1));
+            threadSet.add(thread);
+        }
+
+        for(Thread thread : threadSet) {
+            thread.start();
+        }
+
+        for(Thread thread : threadSet) {
+            thread.join();
+        }
+    }
+}
+
