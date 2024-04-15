@@ -3171,4 +3171,123 @@ public class SequenceGenerator {
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-// Question : 
+// Question : Singleton Design Pattern
+/*
+Singleton DP :
+Ensures that Maximum only 1 object of a class is created EVER.
+When ?
+1. Shared Resource : A class whose all objects have to share a common resource Ex : Database object - Database database = new Database(url,username, password);
+2. Creation of object is expensive (takes lot of time and memory)
+3. Stateless (No attributes) - No difference between all objects
+4. One object to be present across application (config file)
+
+1. Normal method
+ */
+public class Database1 {
+    private static Database1 Database1Instance = null; // needs to static attribute
+    private Database1() {
+
+    }
+    public static Database1 getDatabase1Instance(){ // static method can only access static attributes
+        if (Database1Instance == null) {
+            Database1Instance =  new Database1();
+        }
+        return Database1Instance;
+    }
+}
+/*
+method 2 :
+When 2 different classes trying to call Database.getInstance() at same time from different threads at this line : Database1Instance =  new Database2();
+
+Solution : lazy loading with synchronized method
+cons : synchronized is actually needed when the object is created first time. Later,
+It hits performance
+ */
+public class Database2 {
+    private static Database2 Database1Instance = null;
+    private Database2() {
+
+    }
+    public synchronized static Database2 getDatabase1Instance(){ // add synchronized
+        if (Database1Instance == null) {
+            Database1Instance =  new Database2();
+        }
+        return Database1Instance;
+    }
+}
+/*
+method 3 :
+When 2 different classes trying to call Database.getInstance() at same time from different threads at this line : Database1Instance =  new Database2();
+
+Solution : eager loading
+object created at start of the application
+
+cons :
+1. will slow down startup of application
+2. Memory cost even if object is never needed
+3. parameters in constructor created at runtime, then can't pass them at startup.
+ */
+
+public class Database3 {
+    private static Database3 Database1Instance = new Database3();
+    private Database3() {
+
+    }
+    public  static Database3 getDatabase1Instance(){ // remove synchronized
+        return Database1Instance;
+    }
+}
+/*
+method 4 :
+When 2 different classes trying to call Database.getInstance() at same time from different threads at this line : Database1Instance =  new Database2();
+
+Solution : lazy loading with synchronized block
+
+cons :
+1. it is same as using synchronized method.
+ */
+
+
+public class Database4 {
+    private static Database4 Database1Instance = null;
+    private Database4() {
+
+    }
+    public static Database4 getDatabase1Instance(){ // add synchronized block
+        synchronized (Database4.class) {            // careful here
+            if(Database1Instance == null) {
+                Database1Instance = new Database4();
+            }
+        }
+        return Database1Instance;
+    }
+}
+/*
+method 5 :
+When 2 different classes trying to call Database.getInstance() at same time from different threads at this line : Database1Instance =  new Database2();
+
+Solution : Double check locking (lazy loading with synchronized block)
+
+pros : only one check for first time object is created
+ */
+public class Database5 {
+    private static Database5 Database1Instance = null;
+    private Database5() {
+
+    }
+    public static Database5 getDatabase1Instance(){
+        // careful here
+        if(Database1Instance == null) {
+            synchronized (Database5.class){      // add synchronized block inside if null check
+                if(Database1Instance == null) {
+                    Database1Instance = new Database5();
+                }
+            }
+        }
+
+        return Database1Instance;
+    }
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//Question : 
