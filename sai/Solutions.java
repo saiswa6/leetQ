@@ -3296,6 +3296,35 @@ public class Database5 {
         return Database1Instance;
     }
 }
+
+//METHOD 6 :
+//- The memory model defines what state a thread may see when it reads a memory location modified by other threads.
+/*
+1. Thread A comes along and gets to the second if check and allocates memory for the superman object but doesn't complete construction of the object and gets switched out. The Java memory model doesn't
+ensure that the constructor completes before the reference to the new object is assigned to an instance. It is possible that the variable superman is non-null but the object it points to, is still being
+initialized in the constructor by another thread.
+2. Thread B wants to use the superman object and since the memory is already allocated for the object it fails the first if check and returns a semi-constructed superman object. Attempt to use a partially created
+object results in a crash or undefined behavior.
+*/
+
+//--we mark our superman static object as volatile
+
+//Method 7 :
+/*Next implementation is holder or Bill Pugh's singleton. The idea is to create a private nested static class that holds the static instance. The nested class Helper isn't loaded
+when the outer class Superman is loaded. The inner static class Helper is loaded only when the method getInstance() is invoked. This saves us from eagerly initializing the singleton instance.*/
+public class Database5 {
+    private Database5() {
+
+    }
+
+    private static class Holder {
+        private static final Database5 databaseInstance =  new Database5();
+    }
+    public static Database5 getDatabase1Instance(){
+        return Holder.databaseInstance;
+    }
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 /*Question : Imagine at the end of a political conference, republicans and democrats are trying to leave the venue and ordering Uber rides at the same time.
