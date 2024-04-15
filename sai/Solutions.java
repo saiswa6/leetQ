@@ -3151,4 +3151,24 @@ public class CustomLock {
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// Question : Design SequenceGenerator
+// Solution :
+public class SequenceGenerator {
+    private final AtomicInteger counter = new AtomicInteger(0);
+  
+    public int getNext() {
+        return counter.incrementAndGet();
+    }
+
+    public static void main(String[] args) {
+        SequenceGenerator generator = new SequenceGenerator();
+
+        // Generate some sequence numbers
+        for (int i = 0; i < 10; i++) {
+            System.out.println("Next sequence number: " + generator.getNext());
+        }
+    }
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // Question : 
