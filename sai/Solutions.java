@@ -3593,3 +3593,237 @@ public class MultithreadedTokenBucketFilter {
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// Question : Implement Cyclic Barrier
+/*
+A barrier allows multiple threads to congregate at a point in code before any one of the threads is allowed to move forward. Java and most other languages provide libraries which make barrier construct 
+available for developer use. Even though we are re-inventing the wheel but this makes for a good interview question.
+*/
+//Implementation 1 :
+public class CyclicBarrier1 {
+    int count = 0;
+    int totalThreads;
+
+    public CyclicBarrier1(int totalThreads) {
+        this.totalThreads = totalThreads;
+    }
+
+    public synchronized void await() throws InterruptedException {
+        //increment the counter whenever a thread arrives at the barrier
+        count++;
+
+        if(count == totalThreads) {
+            //wakeup all the threads
+            notifyAll();
+            // remember the count so that barrier can be reused
+            count = 0;
+        } else {
+            wait();
+        }
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        CyclicBarrier1 cyclicBarrier1 = new CyclicBarrier1(3);
+
+        Thread t1 = new Thread(() -> {
+            try {
+                System.out.println("Thread 1");
+                cyclicBarrier1.await();
+                System.out.println("Thread 1");
+                cyclicBarrier1.await();
+                System.out.println("Thread 1");
+                cyclicBarrier1.await();
+            } catch (InterruptedException ie) {
+                ie.printStackTrace();
+            }
+        });
+
+        Thread t2 = new Thread(() -> {
+            try {
+                Thread.sleep(500);
+                System.out.println("Thread 2");
+                cyclicBarrier1.await();
+                Thread.sleep(500);
+                System.out.println("Thread 2");
+                cyclicBarrier1.await();
+                Thread.sleep(500);
+                System.out.println("Thread 2");
+                cyclicBarrier1.await();
+            } catch (InterruptedException ie) {
+                ie.printStackTrace();
+            }
+        });
+
+        Thread t3 = new Thread(() -> {
+            try {
+                Thread.sleep(1500);
+                System.out.println("Thread 3");
+                cyclicBarrier1.await();
+                Thread.sleep(1500);
+                System.out.println("Thread 3");
+                cyclicBarrier1.await();
+                Thread.sleep(1500);
+                System.out.println("Thread 3");
+                cyclicBarrier1.await();
+            } catch (InterruptedException ie) {
+                ie.printStackTrace();
+            }
+        });
+
+        t1.start();
+        t2.start();
+        t3.start();
+
+        t1.join();
+        t2.join();
+        t3.join();
+
+    }
+}
+// Implementation 2 : 
+/*
+The previous implementation is fine if we were guaranteed that no spurious wake-ups could ever occur. The wait() method invocation without the while loop is an error. We discussed in previous
+sections that wait() should always be used with a while loop that checks for a condition and if found false should make the thread wait again. The condition the while loop can check for is simply how many
+threads have incremented the count variable so far. A thread that wakes up spuriously should go back to sleep if the count is less than the total number of threads.
+
+2. The while loop introduces another problem. When the last thread does a notifyAll() it also resets the count to 0, which means the threads that are legitimately woken up will always be stuck in the while loop because count is immediately set to zero. What we really want is not to reset the
+count variable to zero until all the threads escape the while condition when count becomes totalThreads.
+
+3. new variable released that keeps tracks of how many threads exit the barrier and when the last thread exits the barrier it resets count to zero, so that the barrier object can be reused in the future.
+*/
+
+public class CyclicBarrier2 {
+    int released = 0; ////////////////////************************
+    int count = 0;
+    int totalThreads;
+
+    public CyclicBarrier2(int totalThreads) {
+        this.totalThreads = totalThreads;
+    }
+
+    public synchronized void await() throws InterruptedException {
+        //increment the counter whenever a thread arrives at the barrier
+        count++;
+
+        if(count == totalThreads) {
+            //wakeup all the threads
+            notifyAll();
+            // remember the count so that barrier can be reused
+            released = totalThreads;    ////////////////////************************
+        } else {
+            while (count < totalThreads) {   ////////////////////************************
+                wait();
+            }
+        }
+        released--;   ////////////////////************************
+        if(released == 0) {   ////////////////////************************
+            count = 0;
+        }
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        CyclicBarrier2 cyclicBarrier1 = new CyclicBarrier2(3);
+
+        Thread t1 = new Thread(() -> {
+            try {
+                System.out.println("Thread 1");
+                cyclicBarrier1.await();
+                System.out.println("Thread 1");
+                cyclicBarrier1.await();
+                System.out.println("Thread 1");
+                cyclicBarrier1.await();
+            } catch (InterruptedException ie) {
+                ie.printStackTrace();
+            }
+        });
+
+        Thread t2 = new Thread(() -> {
+            try {
+                Thread.sleep(500);
+                System.out.println("Thread 2");
+                cyclicBarrier1.await();
+                Thread.sleep(500);
+                System.out.println("Thread 2");
+                cyclicBarrier1.await();
+                Thread.sleep(500);
+                System.out.println("Thread 2");
+                cyclicBarrier1.await();
+            } catch (InterruptedException ie) {
+                ie.printStackTrace();
+            }
+        });
+
+        Thread t3 = new Thread(() -> {
+            try {
+                Thread.sleep(1500);
+                System.out.println("Thread 3");
+                cyclicBarrier1.await();
+                Thread.sleep(1500);
+                System.out.println("Thread 3");
+                cyclicBarrier1.await();
+                Thread.sleep(1500);
+                System.out.println("Thread 3");
+                cyclicBarrier1.await();
+            } catch (InterruptedException ie) {
+                ie.printStackTrace();
+            }
+        });
+
+        t1.start();
+        t2.start();
+        t3.start();
+
+        t1.join();
+        t2.join();
+        t3.join();
+
+    }
+
+}
+// Implementation 3 
+/*
+2. Threads t3 comes along, executes the if block on line#15 and finds count == totalThreads . Thread t3 doesn't wait, notifies threads t1 and t2 to wakeup and exits.
+3. If thread t3 attempts to invoke await() immediately after exiting it and is also granted the monitor before threads t1 or t2 get a chance to acquire the monitor then the count variable will be incremented to 4.
+4. With count equal to 4, t3 will not block at the barrier and exit which breaks the contract for the barrier.
+5. The invocation order of the await() method was t1,t2,t3, and t3 again. The right behavior would have been to release t1,t2, or t3 in any order and then block t3 on its second invocation of the await() method.
+6. Another flaw with the above code is, it can cause a deadlock. Suppose we wanted the three threads t1, t2, and t3 to congregate at a barrier twice. The first invocation was in the order [t1, t2, t3] and the second 
+was in the order [t3, t2, t1]. If t3 immediately invoked await after the first barrier, it would go past the second barrier without stopping while t2 and t1 would become stranded at the second barrier, since
+count would never equal totalThreads.
+*/
+
+public class CyclicBarrier3 {
+    int released = 0;
+    int count = 0;
+    int totalThreads;
+
+    public CyclicBarrier3(int totalThreads) {
+        this.totalThreads = totalThreads;
+    }
+
+    public synchronized void await() throws InterruptedException {
+        //block any new threads from proceeding till all threads from previous barrier are released ****************Additional
+        while (count == totalThreads) { ////////////////////************************
+            wait();
+        }
+
+        //increment the counter whenever a thread arrives at the barrier
+        count++;
+
+        if(count == totalThreads) {
+            //wakeup all the threads
+            notifyAll();
+            // remember the count so that barrier can be reused
+            released = totalThreads;
+        } else {
+            while (count < totalThreads) {
+                wait();
+            }
+        }
+        released--;
+        if(released == 0) {
+            count = 0;
+        }
+    }
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//Question : 
