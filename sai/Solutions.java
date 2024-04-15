@@ -220,6 +220,14 @@ Implement a thread-safe bounded blocking queue that has the following methods:
 *int dequeue() Returns the element at the rear of the queue and removes it. If the queue is empty, the calling thread is blocked until the queue is no longer empty.
 *int size() Returns the number of elements currently in the queue.
 */
+/*
+Why use the notifyAll() in enqueue() and dequeue() methods instead of the notify() method. 
+Solution : 
+Consider a situation with two producer threads and one consumer thread all working with a queue of size one. It's possible that when an item is added to the queue by one of the producer threads, 
+the other two threads are blocked waiting on the condition variable. If the producer thread after adding an item invokes notify() it is possible that the other producer thread is chosen by the system 
+to resume execution. The woken-up producer thread would find the queue full and go back to waiting on the condition variable, causing a deadlock. Invoking notifyAll() assures that the consumer thread 
+also gets a chance to wake up and resume execution.
+*/
 
 
 // Solution 1 : Synchronized Block, here Queue is intialized with Array , not ArrayDeque(Very Important)
@@ -228,8 +236,8 @@ class BoundedBlockingQueue {
     private int queue[];
     private volatile int size; // declare size as volatile as it is accessed by many threads
     private int capacity;
-    private int readPointer;
-    private int writePointer;
+    private int readPointer;//headPointer of the Queue
+    private int writePointer; //tailPointer of the Queue
 
     public BoundedBlockingQueue(int capacity) {
         this.capacity = capacity;
