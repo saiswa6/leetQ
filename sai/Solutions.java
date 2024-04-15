@@ -2858,3 +2858,142 @@ public class UniSexBathroom1 {
         male4.join();
     }
 }
+// Question : Design Semaphore
+// Solution 1 :
+/*
+acquire(): Decrements the semaphore's permit count. If the permit count is zero, the calling thread will block until a permit is available.
+release(): Increments the semaphore's permit count and wakes up a waiting thread if any.
+availablePermits(): Returns the current number of permits available.
+ */
+
+public class Semaphore {
+    private int permits;
+
+    public Semaphore(int permits) {
+        if (permits < 0) {
+            throw new IllegalArgumentException("Number of permits cannot be negative");
+        }
+        this.permits = permits;
+    }
+
+    public synchronized void acquire() throws InterruptedException {
+        while (permits <= 0) {
+            wait();
+        }
+        permits--;
+    }
+
+    public synchronized void release() {
+        permits++;
+        notify();
+    }
+
+    public synchronized int availablePermits() {
+        return permits;
+    }
+}
+// Main
+package org.concurrency.Questions.DesignSemaphore.Imp1;
+
+public class Main {
+    public static void main(String[] args) throws InterruptedException {
+        Semaphore semaphore = new Semaphore(3);
+
+// Create three threads that will try to acquire permits.
+        Thread thread1 = new Thread(() -> {
+            try {
+                semaphore.acquire();
+                System.out.println("Thread 1 acquired a permit.");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+
+        Thread thread2 = new Thread(() -> {
+            try {
+                semaphore.acquire();
+                System.out.println("Thread 2 acquired a permit.");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+
+        Thread thread3 = new Thread(() -> {
+            try {
+                semaphore.acquire();
+                System.out.println("Thread 3 acquired a permit.");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+
+        Thread thread4 = new Thread(() -> {
+            try {
+                semaphore.acquire();
+                System.out.println("Thread 4 acquired a permit.");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+
+// Start the threads.
+        thread1.start();
+        thread2.start();
+        thread3.start();
+        thread4.start();
+
+// Wait for all threads to finish.
+        thread1.join();
+        thread2.join();
+        thread3.join();
+        thread4.join();
+    }
+}
+
+// Solution 2 : Using Reentrant Lock
+public class SemaphoreUsingLock {
+    private final Lock lock = new ReentrantLock();
+    private final Condition condition = lock.newCondition();
+    private int permits;
+
+    public SemaphoreUsingLock(int permits) {
+        if (permits < 0) {
+            throw new IllegalArgumentException("Number of permits cannot be negative");
+        }
+        this.permits = permits;
+    }
+
+    public void acquire() throws InterruptedException {
+        lock.lock();
+        try {
+            while (permits <= 0) {
+                condition.await();
+            }
+            permits--;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public void release() {
+        lock.lock();
+        try {
+            permits++;
+            condition.signal();
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public int availablePermits() {
+        lock.lock();
+        try {
+            return permits;
+        } finally {
+            lock.unlock();
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// Question : 
