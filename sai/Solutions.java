@@ -3452,7 +3452,7 @@ public class UberSeatingProblem {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //Question : Design Rate limiter with Token Bucket Filter
-//Solution : 
+//Solution 1: Single Threaded Solution
 /*
 The key to the problem is to find a way to track the number of available tokens when a consumer requests for a token. Note the rate at which the tokens are being generated is constant.
 */
@@ -3514,4 +3514,82 @@ public class TokenBucketFilter {
         }
     }
 }
+//Solution 2: Multi Threaded Solution
+package org.concurrency.Questions.RateLimiter.Imp4;
 
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+
+public class MultithreadedTokenBucketFilter {
+    private long possibleTokens = 0;
+    private  int MAX_TOKENS;
+    private int ONE_SECOND = 1000;
+
+    public MultithreadedTokenBucketFilter(int maxTokens) {
+        this.MAX_TOKENS = maxTokens;
+
+        //Never start a thread in a constructor
+        Thread daemonThread = new Thread(() -> {
+            daemonThreadImplementation();
+        });
+
+        daemonThread.setDaemon(true);
+        daemonThread.start();
+    }
+
+    private void daemonThreadImplementation() {
+        while (true) {
+            synchronized (this) {
+                if(possibleTokens < MAX_TOKENS) {
+                    possibleTokens++;
+                }
+                this.notify();
+            }
+
+            try{
+                Thread.sleep(ONE_SECOND);
+            } catch (InterruptedException ie) {
+                ie.printStackTrace();
+            }
+        }
+    }
+
+    public void getToken() throws InterruptedException {
+        synchronized (this){
+            while (possibleTokens == 0) {
+                this.wait();
+            }
+            possibleTokens--;
+
+        }
+        System.out.println("Granting " + Thread.currentThread().getName() + " token at " + new Date());
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        MultithreadedTokenBucketFilter multithreadedTokenBucketFilter = new MultithreadedTokenBucketFilter(3);
+        Set<Thread> threadSet = new HashSet<>();
+
+        for(int i=0; i < 10; i++) {
+            Thread t = new Thread(() -> {
+                try {
+                    multithreadedTokenBucketFilter.getToken();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            t.setName("Thread_" + (i + 1));
+            threadSet.add(t);
+        }
+
+        for(Thread thread : threadSet) {
+            thread.start();
+        }
+
+        for(Thread thread : threadSet) {
+            thread.join();
+        }
+    }
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
