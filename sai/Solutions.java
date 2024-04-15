@@ -3909,3 +3909,84 @@ public class SingleThreadedMergeSort {
         System.out.println("Difference : " + (after - before));
     }
 }
+// Implementation 2 : Multithreaded
+public class MultithreaedThreadedMergeSort {
+    private static void mergeSort(int start, int end, int input[]) {
+        if(start == end) {
+            return;
+        }
+
+        int mid = start + (end - start) / 2;
+
+        //sort the first half
+        Thread worker1 = new Thread(() -> {     //****************************************************
+            mergeSort(start, mid, input);
+        });
+
+        //sort the first half
+        Thread worker2 = new Thread(() -> {     //****************************************************
+            mergeSort(mid+1, end, input);
+        });
+
+        worker1.start();
+        worker2.start();
+
+        try{
+            worker1.join();
+            worker2.join();
+        } catch (InterruptedException ie ){
+            ie.printStackTrace();
+        }
+
+
+        //merge the two sorted arrays
+        int i = start;
+        int j = mid + 1;
+        int k;
+
+        int[] mergeArray = new int[start + end + 1];
+        for( k = start; k<=end;k++) {
+            mergeArray[k] = input[k];
+        }
+
+        k = start;
+
+        while (k <= end) {
+            if(i <= mid && j <= end) {
+                input[k] = Math.min(mergeArray[i], mergeArray[j]);
+
+                if(input[k] == mergeArray[i]) {
+                    i++;
+                } else {
+                    j++;
+                }
+            } else if (i <= mid && j > end) {
+                input[k] = mergeArray[i];
+                i++;
+            } else {
+                input[k] = mergeArray[j];
+                j++;
+            }
+            k++;
+        }
+    }
+
+    private static void printArray(int[] input, String msg) {
+        System.out.println();
+        System.out.print(msg + " ");
+        for (int i = 0; i < input.length; i++) {
+            System.out.print(" " + input[i] + " ");
+        }
+        System.out.println();
+    }
+
+    public static void main(String[] args) {
+        int input [] = new int[]{9,8,7,6,5,4,3,2,1,0};
+        printArray(input, "Before");
+        long before = System.currentTimeMillis();
+        mergeSort(0, input.length - 1, input);
+        long after = System.currentTimeMillis();
+        printArray(input, "After");
+        System.out.println("Difference : " + (after - before));
+    }
+}
