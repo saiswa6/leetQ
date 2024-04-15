@@ -4116,4 +4116,6 @@ public class BarberShopProblem {
         }
 
     }
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// Question : Design and implement a thread-safe class that allows registeration of callback methods that are executed after a user specified time interval in seconds has elapsed.
