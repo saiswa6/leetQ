@@ -2996,4 +2996,145 @@ public class SemaphoreUsingLock {
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// Question : Implement or Design Custom Lock
+// Solution 1 : Using Synchronized
+public class CustomLock {
+
+    private boolean isLocked = false;
+    private Thread lockedBy = null;
+    private int lockedCount = 0;
+
+    public synchronized void lock() throws InterruptedException {
+        Thread callingThread = Thread.currentThread();
+        while (isLocked && lockedBy != callingThread) {
+            wait();
+        }
+        isLocked = true;
+        lockedCount++;
+        lockedBy = callingThread;
+    }
+
+    public synchronized void unlock() {
+        if (Thread.currentThread() == this.lockedBy) {
+            lockedCount--;
+
+            if (lockedCount == 0) {
+                isLocked = false;
+                notify();
+            }
+        }
+    }
+
+    public synchronized boolean tryLock() {
+        if (!isLocked) {
+            isLocked = true;
+            lockedCount++;
+            lockedBy = Thread.currentThread();
+            return true;
+        }
+        return false;
+    }
+
+    public synchronized boolean tryLock(long time, TimeUnit unit) throws InterruptedException {
+        long endTime = System.currentTimeMillis() + unit.toMillis(time);
+        long remainingTime = time;
+
+        while (!tryLock()) {
+            wait(remainingTime);
+
+            remainingTime = endTime - System.currentTimeMillis();
+            if (remainingTime <= 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public synchronized void lockInterruptibly() throws InterruptedException {
+        if (Thread.interrupted()) {
+            throw new InterruptedException();
+        }
+        lock();
+    }
+
+    public synchronized Condition newCondition() {
+        return null;
+        //return new ConditionObject();
+    }
+
+    public synchronized void lockWhen(Predicate<Void> predicate) throws InterruptedException {
+        lock();
+        try {
+            while (!predicate.test(null)) {
+                wait();
+            }
+        } finally {
+            unlock();
+        }
+    }
+
+    public synchronized void signalAll() {
+        notifyAll();
+    }
+}
+// Solution 2 : Using Reentrant Lock
+
+public class CustomLock {
+    private final Lock lock = new ReentrantLock();
+    private final Condition condition = lock.newCondition();
+    private boolean isLocked = false;
+
+    public void lock() {
+        lock.lock();
+        try {
+            while (isLocked) {
+                condition.await();
+            }
+            isLocked = true;
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public void unlock() {
+        lock.lock();
+        try {
+            isLocked = false;
+            condition.signal();
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public void lockWhen(Predicate<Void> predicate) throws InterruptedException {
+        lock();
+        try {
+            while (!predicate.test(null)) {
+                condition.await();
+            }
+        } finally {
+            unlock();
+        }
+    }
+
+    public static void main(String[] args) {
+        CustomLock customLock = new CustomLock();
+
+        // Example usage
+        try {
+            customLock.lock();
+            System.out.println("Lock acquired");
+
+            // Do some work
+
+        } finally {
+            customLock.unlock();
+            System.out.println("Lock released");
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // Question : 
