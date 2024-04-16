@@ -1,12 +1,11 @@
 class TrafficLight {
 
-    private ReentrantLock lock;
+    private ReentrantLock lock ;
     private int currentRoadId;
 
     public TrafficLight() {
         lock = new ReentrantLock(true);
         currentRoadId = 1;
-        
     }
     
     public void carArrived(
@@ -16,14 +15,15 @@ class TrafficLight {
         Runnable turnGreen,  // Use turnGreen.run() to turn light to green on current road
         Runnable crossCar    // Use crossCar.run() to make car cross the intersection 
     ) {
-        
-        if (currentRoadId != roadId) {
+        try{
             lock.lock();
-            turnGreen.run();
-            currentRoadId = roadId;
+            if(currentRoadId != roadId) {
+                turnGreen.run();
+                currentRoadId = roadId;
+            }
+            crossCar.run();
+        } finally{
             lock.unlock();
         }
-        crossCar.run();
-        
     }
 }
