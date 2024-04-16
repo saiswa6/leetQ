@@ -2,7 +2,7 @@
  * // This is the HtmlParser's API interface.
  * // You should not implement it, or speculate about its implementation
  * interface HtmlParser {
- * public List<String> getUrls(String url) {}
+ *     public List<String> getUrls(String url) {}
  * }
  */
 class Solution {
@@ -30,12 +30,12 @@ class AsyncCrawler {
 
     public List<String> crawl(String startUrl) {
         String host = getHostname(startUrl);
-        // System.out.println("Crawl asynchronously. Host: " + host);
+        //System.out.println("Crawl asynchronously. Host: " + host);
         return new ArrayList<>(async(startUrl, host).join());
     }
 
     CompletableFuture<Set<String>> async(String url, String host) {
-        // System.out.println("Async crawling. Url: " + url);
+        //System.out.println("Async crawling. Url: " + url);
         visited.add(url);
 
         return CompletableFuture
@@ -47,7 +47,7 @@ class AsyncCrawler {
                     CompletableFuture<Set<String>> result = CompletableFuture.completedFuture(initData);
 
                     for (String subUrl : subUrls) {
-                        // System.out.println("Parse subUrl: " + subUrl);
+                        //System.out.println("Parse subUrl: " + subUrl);
                         if (visited.contains(subUrl) || !isSameHostname(subUrl, host)) {
                             continue;
                         }
@@ -61,7 +61,7 @@ class AsyncCrawler {
                     return result;
                 });
     }
-
+    
     String getHostname(String url) {
         int idx = url.indexOf('/', 7);
         return (idx != -1) ? url.substring(0, idx) : url;
