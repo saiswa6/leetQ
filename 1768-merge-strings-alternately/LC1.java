@@ -46,3 +46,43 @@ We iterate over word1 and word2 once and push their letters into result. It woul
 Space complexity: O(1)
 Without considering the space consumed by the input strings (word1 and word2) and the output string (result), we do not use more than constant space.
 */
+
+/*
+How to Convert Char Array to String in Java
+-------------------------------------------
+1. Using String Class Constructor
+The String class provides a constructor that parses a char[] array as a parameter and allocates a new String. It represents the sequence of the characters (string). If we do any modification in the char[] array, the newly created string remains the same.
+
+Syntax:
+public String (char[] value)  
+Ex : //character array  
+     char[] ch = {'w', 'e', 'l', 'c', 'o', 'm', 'e', ' ' , 't', 'o', ' ', 'J', 'a', 'v', 'a', 't', 'p', 'o', 'i', 'n', 't'};  
+     //constructor of the String class that parses char array as a parameter  
+     String string = new String(ch);  
+
+2. Using valueOf() Method
+The valueOf() method is a static method of the String class that is also used to convert char[] array to string. The method parses a char[] array as a parameter. 
+It returns a newly allocated string that represents the same sequence of characters contained in the character array
+
+Ex : //constructor of the String class  
+    String str = new String();  
+    //invoking valueOf() method of the String class  
+    String string = str.valueOf(chars);  
+
+3. Using StringBuilder Class
+append() Method
+- The append() method of the StringBuilder class appends the string representation of the char[] array. It parses parameter str that is to be appended. 
+- It returns a reference to this object. 
+toString() Method
+- The toString() method of the StringBuilder class returns a string that represents the data in the sequence. It allocates a new String object and initialized to contain the character sequence. 
+- If we do any change in the char[] array, it does not affect the newly created string.
+Ex: StringBuilder sb = new StringBuilder();  
+    //Java for-each loop  
+    for(char chars: ch)   
+    {  
+    //appends the string representation of the char array   
+    sb.append(chars);  
+    }  
+    //the toString() method returns a string that represents data in the sequence  
+    String string = sb.toString();  
+*/
