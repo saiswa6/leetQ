@@ -42,4 +42,8 @@ push the result in result which takes O(1) time. It requires O(n) time for n kid
 
 Space complexity: O(1)
 - Without counting the space of input and output, we are not using any space except for some integers like maxCandies and candy.
+
+Since we know the size of the result, we can set the initial capacity of the result list. 
+In this case, we will improve the complexity of result.add(..) from avarage O(1) to O(1). We'll avoid a number of result list expandings.
+            List<Boolean> result = new ArrayList<>(candies.length);
 */
