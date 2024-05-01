@@ -1,3 +1,14 @@
+/*
+1st Approach : Brute force O(N2)
+
+2nd Approach :
+Using prefix and suffix array.
+Time : O(N)
+Time : O(N)
+
+
+*/
+
 class Solution {
     public int[] productExceptSelf(int[] nums) {
         int length = nums.length;
