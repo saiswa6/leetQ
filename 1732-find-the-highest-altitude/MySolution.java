@@ -1,3 +1,6 @@
+// Compare and update altitude at each level
+// Be careful, compare with altitude 0.
+
 class Solution {
     public int largestAltitude(int[] gain) {
         int answer = Integer.MIN_VALUE; // Min Value in Integer
