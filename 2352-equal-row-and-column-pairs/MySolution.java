@@ -1,3 +1,5 @@
+// Using HashMap
+
 class Solution {
     public int equalPairs(int[][] grid) {
         Map<List<Integer>, Integer> rowMap = new HashMap<>();
