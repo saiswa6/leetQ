@@ -1,3 +1,8 @@
+// 1st : Brute Force - check for each element. T.C : O(N2)
+// 2nd : Use prefix and suffix array. check from left for 1st occurence. T.C : O(N2) , S.C : O(1)
+// 3rd : No Space. It is LC Solution. Check LC1.
+
+
 class Solution {
     public int pivotIndex(int[] nums) {
         int length = nums.length;
