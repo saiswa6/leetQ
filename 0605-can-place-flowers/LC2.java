@@ -39,5 +39,42 @@ Space complexity: O(1)O(1)O(1). Constant extra space is used.
 
 /*
 Optimization :
-
+for further optimization we could increment the iterator "i" by 2(can be done for while loop not for loop) every time we plant a flower as we know for sure that the subsequent place cannot be planted
 */
+class Solution {
+    public boolean canPlaceFlowers(int[] flowerbed, int n) {
+        if (flowerbed.length == 1) {
+            return flowerbed[0] == 0 || n == 0;
+        }
+
+        int planted = 0, i = 0;
+
+        while (i < flowerbed.length - 1) {
+
+            int curr = flowerbed[i], next = flowerbed[i + 1];
+
+            if (curr == 0) {
+                if (next == 1) {
+                    i += 3;
+                } else {
+                    planted++;
+                    flowerbed[i] = 1;
+                    i += 2;
+                }
+            } else {
+                if (next == 1) {
+                    i += 3;
+                } else {
+                    i += 2;
+                }
+            }
+        }
+
+        if (i == flowerbed.length - 1 && flowerbed[i - 1] == 0 && flowerbed[i] == 0) {
+            planted++;
+        }
+
+        return planted >= n;
+
+    }
+}
