@@ -1,3 +1,5 @@
+//Sorting and Two pointer approach
+
 class Solution {
     public int maxOperations(int[] nums, int k) {
         Arrays.sort(nums);
