@@ -1,5 +1,6 @@
 // Compare and update altitude at each level
 // Be careful, compare with altitude 0.
+// PrefixSum Question
 
 class Solution {
     public int largestAltitude(int[] gain) {
