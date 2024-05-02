@@ -2,6 +2,31 @@ class Solution {
     public String removeStars(String s) {
         char sArray[] = s.toCharArray();
         int length = s.length();
+        Stack<Character> st = new Stack<>();
+
+        for (int i = 0; i < length; i++) { // '0' is used to mark char as non existent as deletion is costly.
+            if (sArray[i] == '*' && !st.isEmpty()) { // If '*' is found, traverse back to see first non star and also check not '0'
+                st.pop();
+            } else {
+                st.push(sArray[i]);
+            }
+        }
+
+        StringBuilder stringBuilder = new StringBuilder(); // Traverse and append
+        while(!st.isEmpty()) {
+            stringBuilder =  stringBuilder.append(st.pop());
+        }
+
+        return stringBuilder.reverse().toString();
+    }
+}
+
+/*
+// Brute Force
+class Solution {
+    public String removeStars(String s) {
+        char sArray[] = s.toCharArray();
+        int length = s.length();
 
         for (int i = 0; i < length; i++) { // '0' is used to mark char as non existent as deletion is costly.
             if (sArray[i] == '*') { // If '*' is found, traverse back to see first non star and also check not '0'
@@ -25,3 +50,4 @@ class Solution {
         return stringBuilder.toString();
     }
 }
+*/
