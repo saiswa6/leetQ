@@ -15,6 +15,9 @@ Intuition
 As we know that stack follows the Last In First Out (LIFO) Principle, the top of the stack would have the data we must decode.
 */
 
+
+//******************************
+// LC2 and LC3 Solutions are available. Check and learn them.
 class Solution {
     public String decodeString(String s) {
         Stack<Character> stack = new Stack<>();
