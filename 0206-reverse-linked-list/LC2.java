@@ -33,3 +33,6 @@ Assume that n is the list's length, the time complexity is O(n)
 Space complexity : O(n)
 The extra space comes from implicit stack space due to recursion. The recursion could go up to n levels deep.
 */
+
+
+// Suggestion : pushing all values onto a stack and then building out the list as you pop from the stack? That would be O(n) time and O(n) space.
