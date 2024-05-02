@@ -1,6 +1,6 @@
 /*
 Approach 3: Trie
-// Learn Trie
+// Learn Trie , check clear solution from LCEditorial.
 
 - Trie, also known as prefix tree, is a tree-like data structure which is often used to store strings (In this problem, we store arrays of integers instead of strings). 
   The key advantage of trie is its efficient search time, which can be achieved in O(n)) time where nnn is the length of the array. Trie works by storing each element of the array in a separate node, 
@@ -73,3 +73,15 @@ class Solution {
     }
 }
 
+/*
+Complexity Analysis
+Let n×n be the size of grid.
+Time complexity: O(n2)
+
+The length of input rows is fixed to nnn, the time complexity of building a trie for nnn rows is O(n2), since we need to traverse each element in the array to insert it into the trie.
+The time complexity of search an array of length nnn is O(n) as we need to iterate over the entire array in the worst-case scenario.
+
+Space complexity: O(n2)
+In a trie, each node represents a number. Therefore, for n rows of length n, the trie has n2 nodes in the worst-case scenario.
+
+*/
