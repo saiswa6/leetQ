@@ -14,15 +14,15 @@ class Solution {
         ListNode slow = head;
         ListNode fast = head;
 
-        while (fast != null && fast.next != null) {
-            prev = slow;
+        while (fast != null && fast.next != null) { // for fast && fast.next for odd and even elements.
+            prev = slow; // To track previous node of middle.
             slow = slow.next;
             fast = fast.next.next;
         }
-        if (prev == null) {
+        if (prev == null) { // prev is null, that means only one element is there. Remove head.
             return null;
         }
-        prev.next = slow.next;
+        prev.next = slow.next; // connect to prev to next
         return head;
     }
 }
