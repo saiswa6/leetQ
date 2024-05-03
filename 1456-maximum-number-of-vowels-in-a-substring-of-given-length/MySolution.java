@@ -1,3 +1,5 @@
+//Sliding Window
+
 class Solution {
     public int maxVowels(String s, int k) {
         int start = 0;
@@ -9,15 +11,15 @@ class Solution {
                 countVowel++;
             }
 
-            if (end - start >= k) {
+            if (end - start >= k) {  // Boundary condition
                 if (isVowel(s.charAt(start))) {
                     countVowel--;    
                 }
-                start++;
+                start++;   // Irrespective of vowel and not vowel, increment start.
             }
 
             if (end - start == k - 1) {
-                maxCount = Math.max(maxCount, countVowel);
+                maxCount = Math.max(maxCount, countVowel);  // Update
             }
         }
 
