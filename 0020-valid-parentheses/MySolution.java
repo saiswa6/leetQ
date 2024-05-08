@@ -1,3 +1,5 @@
+//Using Stack
+
 class Solution {
     public boolean isValid(String s) {
         Stack<Character> stack = new Stack<>();
@@ -8,13 +10,13 @@ class Solution {
                 stack.push(symbol);
             } else {
                 char matchSymbol = getRelevantChar(symbol);
-                if (stack.isEmpty() && matchSymbol != stack.peek()) {
+                if (stack.isEmpty() && matchSymbol != stack.peek()) {// --> This is Important. If empty, then false
                     return false;
                 }
                 stack.pop();
             }
         }
-        return stack.isEmpty();
+        return stack.isEmpty();  // --> This is Important. If empty, then true
     }
 
     public char getRelevantChar(char ch) {
