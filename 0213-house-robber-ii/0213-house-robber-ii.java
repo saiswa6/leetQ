@@ -1,6 +1,9 @@
 class Solution {
     public int rob(int[] nums) {
         int n = nums.length;
+        if(n == 1) {
+            return nums[0];
+        }
         List<Integer> list1 = new ArrayList<>();
         List<Integer> list2 = new ArrayList<>();
 
