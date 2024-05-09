@@ -1,3 +1,5 @@
+// Using Single HashMap
+
 class Solution {
     public boolean wordPattern(String pattern, String s) {
         String[] sArray = s.split(" ");
