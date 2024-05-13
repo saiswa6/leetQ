@@ -21,9 +21,9 @@ class Solution {
         long answer = topKSum * pairs[k - 1][1];
 
         for(int i = k; i < n ; i++) {
-            topKSum = topKSum - topK.poll() + pairs[k][0];
-            topK.offer(pairs[k][0]);
-            answer = Math.max(answer, topKSum * pairs[k][1]);
+            topKSum = topKSum - topK.poll() + pairs[i][0];
+            topK.offer(pairs[i][0]);
+            answer = Math.max(answer, topKSum * pairs[i][1]);
         }
         return answer;
     }
